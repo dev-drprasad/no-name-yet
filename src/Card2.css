@@ -1,0 +1,31 @@
+/* CardInner require to prevent box-shadow at middle */
+.App .Card2 .Card2Inner {
+  width: 800px;
+  height: 400px;
+  text-align: initial;
+  box-shadow: 8px 8px 20px 10px rgba(100, 100, 100, 0.15);
+}
+
+.App .Options {
+  margin-bottom: 15px;
+}
+
+.App .Card2 {
+  background-color: rgb(74, 144, 226);
+  padding: 30px 40px 15px 40px;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+}
+
+.App .Card2 .Heading {
+  margin-bottom: 30px;
+  font-size: 30px;
+  color: white;
+  font-family: inherit;
+}
+
+.App .Card2 .Footer {
+  margin-top: 30px;
+  color: #f0f0f0;
+  font-family: inherit;
+}

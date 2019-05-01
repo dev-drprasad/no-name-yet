@@ -1,7 +1,18 @@
 .App {
   text-align: center;
+  display: grid;
+  grid-template-columns: 250px auto;
 }
 
+.App .Sidebar .CardList {
+  padding: 15px;
+}
+.App .CardList li {
+  margin-bottom: 15px;
+}
+.App .CardList li img {
+  width: 100%;
+}
 /* https://github.com/tsayen/dom-to-image/issues/77 */
 .CardWrapper-CropBug {
   display: inline-block;
@@ -18,6 +29,10 @@
   box-shadow: 8px 8px 20px 10px rgba(100, 100, 100, 0.15);
 }
 
+.App .Options {
+  margin-bottom: 15px;
+}
+
 .App .Card .CardInner .Content {
   background-color: white;
   padding: 15px;
@@ -27,15 +42,16 @@
 .App .Card {
   background-color: rgb(74, 144, 226);
   padding: 40px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .App .Card .CardInner .CodeEditor {
 }
 
-.App .Card .CardInner .CodeEditor .ace_content {
+.App .CodeEditor .ace_content {
   padding: 15px;
 }
 
-.App .Card .CardInner .CodeEditor .ace_hidden-cursors {
+.App .CodeEditor .ace_hidden-cursors {
   opacity: 0;
 }
