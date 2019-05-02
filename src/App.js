@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import domtoimage from "dom-to-image";
 
@@ -7,19 +7,56 @@ import Card2 from "./Card2";
 
 import "./App.css";
 
+const themes = [
+  { name: "One Dark", value: "one-dark" },
+  { name: "Monokai", value: "monokai" },
+  { name: "Tomorrow", value: "tomorrow" },
+  { name: "XCode", value: "xcode" },
+  { name: "Solarized Light", value: "solarized_light" },
+  { name: "Dracula", value: "dracula" }
+];
+
+const DEFAULT_THEME = themes[0].value;
+
 function App() {
   const [cardBGColor, setCardBGColor] = useState("#00a8e8");
   const [selectedCard, setSelecctedCard] = useState(0);
-  const ref = React.useRef(null);
+  const cardRef = React.useRef(null);
+  const editorRef = React.useRef(null);
 
+  const handleBeforeLoad = ace => {
+    ace.config.set("themePath", process.env.PUBLIC_URL + "/js/ace/themes/");
+  };
+  const handleEditorLoad = editor => {};
   const download = () => {
-    domtoimage.toBlob(ref.current).then(blob => {
+    domtoimage.toBlob(cardRef.current).then(blob => {
       const a = document.createElement("a");
       a.href = URL.createObjectURL(blob);
       a.download = `card-${Date.now() + Math.floor(Math.random() * 5000)}`;
       a.click();
     });
   };
+
+  const handleThemeChange = theme => {
+    const editor = editorRef.current.editor;
+    import(`brace/theme/${theme}`)
+      .then(() => {
+        editor.setTheme(`ace/theme/${theme}`);
+      })
+      .catch(() => editor.setTheme(`ace/theme/${theme}`));
+  };
+
+  useEffect(() => {
+    const editor = editorRef.current.editor;
+    console.log("editor :", editor);
+
+    editor.setOptions({
+      fontFamily: "Fira Code"
+    });
+
+    editor.renderer.setScrollMargin(15, 15, 15, 15);
+    editor.renderer.setPadding(15);
+  }, [selectedCard]);
   return (
     <div className="App">
       <div className="Sidebar">
@@ -43,9 +80,35 @@ function App() {
                 onChange={e => setCardBGColor(e.target.value)}
               />
             </label>
+            <label>
+              Code theme:
+              <select onChange={e => handleThemeChange(e.target.value)}>
+                {themes.map(({ name, value }) => (
+                  <option key={value} value={value}>
+                    {name}
+                  </option>
+                ))}
+              </select>
+            </label>
           </div>
-          {selectedCard === 0 && <Card1 ref={ref} cardBGColor={cardBGColor} />}
-          {selectedCard === 1 && <Card2 ref={ref} cardBGColor={cardBGColor} />}
+          {selectedCard === 0 && (
+            <Card1
+              theme={DEFAULT_THEME}
+              ref={{ cardRef, editorRef }}
+              cardBGColor={cardBGColor}
+              onEditorLoad={handleEditorLoad}
+              onBeforeLoad={handleBeforeLoad}
+            />
+          )}
+          {selectedCard === 1 && (
+            <Card2
+              theme={DEFAULT_THEME}
+              ref={{ cardRef, editorRef }}
+              cardBGColor={cardBGColor}
+              onEditorLoad={handleEditorLoad}
+              onBeforeLoad={handleBeforeLoad}
+            />
+          )}
         </div>
         <div>
           <button type="button" onClick={download}>
