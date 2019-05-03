@@ -18,6 +18,27 @@ const themes = [
 
 const DEFAULT_THEME = themes[0].value;
 
+const getTwitterEmbeddableImageUrl = blob => {
+  const form = new FormData();
+  form.append("file", blob);
+  return fetch("/api/tweet", {
+    method: "POST",
+    body: form
+  })
+    .then(res => res.json())
+    .then(result => result.imageUrl);
+};
+
+const openTwitterUrl = twitterUrl => {
+  const width = 575;
+  const height = 400;
+  const left = (window.outerWidth - width) / 2;
+  const top = (window.outerHeight - height) / 2;
+  const opts = `status=1,width=${width},height=${height},top=${top},left=${left}`;
+
+  window.open(twitterUrl, "twitter", opts);
+};
+
 function App() {
   const [cardBGColor, setCardBGColor] = useState("#00a8e8");
   const [selectedCard, setSelecctedCard] = useState(0);
@@ -35,6 +56,15 @@ function App() {
       a.download = `card-${Date.now() + Math.floor(Math.random() * 5000)}`;
       a.click();
     });
+  };
+
+  const tweet = () => {
+    domtoimage
+      .toBlob(cardRef.current)
+      .then(getTwitterEmbeddableImageUrl)
+      .then(imageUrl => encodeURIComponent(imageUrl))
+      .then(uri => `https://twitter.com/intent/tweet?text=${uri}`)
+      .then(openTwitterUrl);
   };
 
   const handleThemeChange = theme => {
@@ -130,6 +160,9 @@ function App() {
         <div>
           <button type="button" onClick={download}>
             Download
+          </button>
+          <button type="button" onClick={tweet}>
+            Tweet
           </button>
         </div>
       </main>

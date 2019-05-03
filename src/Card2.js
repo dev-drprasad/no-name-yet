@@ -1,7 +1,7 @@
 import React, { forwardRef } from "react";
 import AceEditor from "react-ace";
 
-import "brace/mode/javascript";
+import "brace/mode/golang";
 // import "brace/theme/dracula";
 
 import "./Card2.css";
@@ -18,7 +18,7 @@ const Card = forwardRef(
         <div className="Card2Inner">
           <AceEditor
             className="CodeEditor"
-            mode="javascript"
+            mode="golang"
             theme={theme}
             name="code-editor"
             width="100%"
