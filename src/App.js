@@ -47,6 +47,23 @@ function App() {
   };
 
   useEffect(() => {
+    const handler = event => {
+      event.preventDefault();
+      const text = event.clipboardData.getData("text/plain");
+      document.execCommand("insertHTML", false, text);
+    };
+
+    document
+      .querySelectorAll('div[contenteditable="true"]')
+      .forEach(el => el.addEventListener("paste", handler));
+
+    return () =>
+      document
+        .querySelectorAll('div[contenteditable="true"]')
+        .forEach(el => el.removeEventListener("paste", handler));
+  }, [selectedCard]);
+
+  useEffect(() => {
     const editor = editorRef.current.editor;
     console.log("editor :", editor);
 

@@ -8,7 +8,6 @@ import "./Card2.css";
 
 const Card = forwardRef(
   ({ cardBGColor, onEditorLoad, onBeforeLoad, theme }, ref) => {
-    console.log("theme :", theme);
     return (
       <div
         className="Card2"

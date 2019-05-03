@@ -13,7 +13,7 @@ const Card = forwardRef(
         style={{ backgroundColor: cardBGColor }}
       >
         <div className="CardInner">
-          <div className="Content" contentEditable />
+          <div className="Content" spellCheck="false" contentEditable />
           <AceEditor
             ref={ref.editorRef}
             className="CodeEditor"
