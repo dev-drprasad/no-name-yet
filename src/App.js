@@ -17,7 +17,8 @@ const themes = [
 ];
 
 const DEFAULT_THEME = themes[0].value;
-const TWEETER_URL = process.env.TWEETER_URL || window.location.href;
+const TWEETER_URL =
+  process.env.REACT_APP_CUSTOM_ENV_TWEETER_URL || window.location.href;
 
 const getTwitterEmbeddableImageUrl = blob => {
   const form = new FormData();
