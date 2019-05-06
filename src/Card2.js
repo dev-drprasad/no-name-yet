@@ -5,6 +5,7 @@ import "brace/mode/golang";
 // import "brace/theme/dracula";
 
 import "./Card2.css";
+import ContentEditor from "./ContentEditor";
 
 const Card = forwardRef(
   ({ cardBGColor, onEditorLoad, onBeforeLoad, theme }, ref) => {
@@ -35,7 +36,7 @@ const Card = forwardRef(
             onBeforeLoad={onBeforeLoad}
           />
         </div>
-        <div className="Footer" spellCheck="false" contentEditable />
+        <ContentEditor />
       </div>
     );
   }

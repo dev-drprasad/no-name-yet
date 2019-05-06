@@ -1,0 +1,8 @@
+.ContentEditor {
+  .TextFormatBar {
+    input[type="button"] {
+      width: 30px;
+      height: 30px;
+    }
+  }
+}
