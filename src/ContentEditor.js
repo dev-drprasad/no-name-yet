@@ -1,22 +1,56 @@
-import React from "react";
+import React, { useState } from "react";
 
 import "./ContentEditor.css";
 
-const ContentEditor = () => {
+const ContentEditor = ({ className }) => {
+  const [settings, setSettings] = useState({
+    textColor: "white",
+    backgroundColor: "#ffffff00"
+  });
+
+  const handleTextColorChange = e => {
+    setSettings({ ...settings, textColor: e.target.value });
+  };
+  const handleBackgroundColorChange = e => {
+    setSettings({ ...settings, backgroundColor: e.target.value });
+  };
   return (
-    <div className="ContentEditor" contentEditable spellCheck="false">
+    <div
+      className={`ContentEditor ${className}`}
+      style={{ backgroundColor: settings.backgroundColor }}
+    >
+      <div
+        style={{ color: settings.textColor }}
+        spellCheck="false"
+        contentEditable
+      />
       <div className="TextFormatBar">
-        <input
-          className="TextColorButton"
-          type="button"
-          value="A"
-          title="text color"
-        />
-        <input
-          className="BGColorButton"
-          type="button"
-          title="background color"
-        />
+        <span
+          role="button"
+          className="ColorSelect TextColorSelect"
+          style={{ color: settings.textColor }}
+        >
+          A
+          <input
+            type="color"
+            value={settings.textColor}
+            title="text color"
+            onChange={handleTextColorChange}
+          />
+        </span>
+        <span className="Seperator" />
+        <span
+          role="button"
+          className="ColorSelect BGColorSelect"
+          style={{ backgroundColor: settings.backgroundColor }}
+        >
+          <input
+            type="color"
+            value={settings.backgroundColor}
+            onChange={handleBackgroundColorChange}
+            title="background color"
+          />
+        </span>
       </div>
     </div>
   );

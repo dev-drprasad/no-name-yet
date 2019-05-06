@@ -11,20 +11,24 @@
 
 .App .Card2 {
   background-color: rgb(74, 144, 226);
-  padding: 30px 40px 15px 40px;
+  padding: 20px 40px 80px 40px;
+  position: relative;
 }
 
-.App .Card2 .Heading {
+.App .Card2 .CardHeading {
   margin-bottom: 30px;
   font-size: 30px;
   color: white;
   font-family: inherit;
-  outline: 0;
 }
 
-.App .Card2 .Footer {
-  margin-top: 30px;
+.App .Card2 .CardFooter {
   color: #f0f0f0;
   font-family: inherit;
-  outline: 0;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 55px;
+  width: 100%;
+  font-weight: 600;
 }

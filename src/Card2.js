@@ -15,7 +15,7 @@ const Card = forwardRef(
         ref={ref.cardRef}
         style={{ backgroundColor: cardBGColor }}
       >
-        <div className="Heading" spellCheck="false" contentEditable />
+        <ContentEditor className="CardHeading" />
         <div className="Card2Inner">
           <AceEditor
             className="CodeEditor"
@@ -36,7 +36,7 @@ const Card = forwardRef(
             onBeforeLoad={onBeforeLoad}
           />
         </div>
-        <ContentEditor />
+        <ContentEditor className="CardFooter" />
       </div>
     );
   }
