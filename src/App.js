@@ -17,11 +17,12 @@ const themes = [
 ];
 
 const DEFAULT_THEME = themes[0].value;
+const TWEETER_URL = process.env.TWEETER_URL || window.location.href;
 
 const getTwitterEmbeddableImageUrl = blob => {
   const form = new FormData();
   form.append("file", blob);
-  return fetch("/api/tweet", {
+  return fetch(new URL("/api/tweet", TWEETER_URL), {
     method: "POST",
     body: form
   })
@@ -29,14 +30,18 @@ const getTwitterEmbeddableImageUrl = blob => {
     .then(result => result.imageUrl);
 };
 
-const openTwitterUrl = twitterUrl => {
+const tweet = text => {
   const width = 575;
   const height = 400;
   const left = (window.outerWidth - width) / 2;
   const top = (window.outerHeight - height) / 2;
   const opts = `status=1,width=${width},height=${height},top=${top},left=${left}`;
 
-  window.open(twitterUrl, "twitter", opts);
+  window.open(
+    `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`,
+    "twitter",
+    opts
+  );
 };
 
 function App() {
@@ -58,13 +63,11 @@ function App() {
     });
   };
 
-  const tweet = () => {
+  const handleTweet = () => {
     domtoimage
       .toBlob(cardRef.current)
       .then(getTwitterEmbeddableImageUrl)
-      .then(imageUrl => encodeURIComponent(imageUrl))
-      .then(uri => `https://twitter.com/intent/tweet?text=${uri}`)
-      .then(openTwitterUrl);
+      .then(tweet);
   };
 
   const handleThemeChange = theme => {
@@ -95,7 +98,6 @@ function App() {
 
   useEffect(() => {
     const editor = editorRef.current.editor;
-    console.log("editor :", editor);
 
     editor.setOptions({
       fontFamily: "Fira Code"
@@ -109,10 +111,16 @@ function App() {
       <div className="Sidebar">
         <ul className="CardList">
           <li onClick={() => setSelecctedCard(0)}>
-            <img src={process.env.PUBLIC_URL + "/images/card1.png"} />
+            <img
+              src={process.env.PUBLIC_URL + "/images/card1.png"}
+              alt="template 1"
+            />
           </li>
           <li onClick={() => setSelecctedCard(1)}>
-            <img src={process.env.PUBLIC_URL + "/images/card2.png"} />
+            <img
+              src={process.env.PUBLIC_URL + "/images/card2.png"}
+              alt="template 2"
+            />
           </li>
         </ul>
       </div>
@@ -161,7 +169,7 @@ function App() {
           <button type="button" onClick={download}>
             Download
           </button>
-          <button type="button" onClick={tweet}>
+          <button type="button" onClick={handleTweet}>
             Tweet
           </button>
         </div>
