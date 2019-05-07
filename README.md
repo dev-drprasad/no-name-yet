@@ -1,19 +1,26 @@
 ## no-name-yet
 
-Will write it later
+As for now, i have no f\*\*king idea on what to name the project
 
-![](public/images/card1.png)
-![](public/images/card2.png)
-![](public/images/card3.png)
+I am really lazy to write README.md. For now i will add following line:
+
+    This project is inspired from cardon.now.sh and samantha ming's tidbits
+
+and of course, some screenshots
+
+<img src="public/images/card1.png" width="600" />
+<img src="public/images/card2.png" width="600" />
+<img src="public/images/card3.png" width="600" />
 
 #### Todo
 
-- [] Reset colors functionality
-- [] Add placeholder text for content and code editors
-- [] Add way to increase padding of card (vertically and horizontally)
-- [] Funtionality to add/remove footer (may be header) for any template
-- [] Multiple font support (both content/editor)
-- [] Should we switch to monaco-editor ??????
+- [ ] Reset colors functionality
+- [ ] Add placeholder text for content and code editors
+- [ ] Add way to increase padding of card (vertically and horizontally)
+- [ ] Funtionality to add/remove footer (may be header) for any template
+- [ ] Multiple font support (both content/editor)
+- [ ] Should we switch to monaco-editor ??????
+- [ ] Add names for templates
 
 #### References:
 
