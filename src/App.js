@@ -4,6 +4,7 @@ import domtoimage from "dom-to-image";
 
 import Card1 from "./Card1";
 import Card2 from "./Card2";
+import Card3 from "./Card3";
 
 import "./App.css";
 
@@ -98,14 +99,17 @@ function App() {
   }, [selectedCard]);
 
   useEffect(() => {
-    const editor = editorRef.current.editor;
+    // some cards wont have editors
+    if (editorRef.current) {
+      const editor = editorRef.current.editor;
 
-    editor.setOptions({
-      fontFamily: "Fira Code"
-    });
+      editor.setOptions({
+        fontFamily: "Fira Code"
+      });
 
-    editor.renderer.setScrollMargin(15, 15, 15, 15);
-    editor.renderer.setPadding(15);
+      editor.renderer.setScrollMargin(15, 15, 15, 15);
+      editor.renderer.setPadding(15);
+    }
   }, [selectedCard]);
   return (
     <div className="App">
@@ -121,6 +125,12 @@ function App() {
             <img
               src={process.env.PUBLIC_URL + "/images/card2.png"}
               alt="template 2"
+            />
+          </li>
+          <li onClick={() => setSelecctedCard(2)}>
+            <img
+              src={process.env.PUBLIC_URL + "/images/card3.png"}
+              alt="template 3"
             />
           </li>
         </ul>
@@ -164,6 +174,9 @@ function App() {
               onEditorLoad={handleEditorLoad}
               onBeforeLoad={handleBeforeLoad}
             />
+          )}
+          {selectedCard === 2 && (
+            <Card3 ref={cardRef} cardBGColor={cardBGColor} />
           )}
         </div>
         <div>

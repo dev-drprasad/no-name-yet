@@ -2,11 +2,11 @@ import React, { useState } from "react";
 
 import "./ContentEditor.css";
 
-const ContentEditor = ({ className }) => {
-  const [settings, setSettings] = useState({
-    textColor: "white",
-    backgroundColor: "#ffffff00"
-  });
+const ContentEditor = ({ className, defaultTextColor, defaultBGColor }) => {
+  const [settings, setSettings] = useState(() => ({
+    textColor: defaultTextColor || "white",
+    backgroundColor: defaultBGColor || "#ffffff00"
+  }));
 
   const handleTextColorChange = e => {
     setSettings({ ...settings, textColor: e.target.value });
