@@ -3,6 +3,7 @@ import AceEditor from "react-ace";
 
 import "brace/mode/javascript";
 import CodeEditor from "./CodeEditor";
+import MonacoEditor from "./MonacoEditor";
 // import "brace/theme/dracula";
 
 const Card = forwardRef(({ cardBGColor, theme, mode }, ref) => {
@@ -14,7 +15,8 @@ const Card = forwardRef(({ cardBGColor, theme, mode }, ref) => {
     >
       <div className="CardInner">
         <div className="Content" spellCheck="false" contentEditable />
-        <CodeEditor ref={ref.editorRef} theme={theme} mode={mode} />
+        {/* <CodeEditor ref={ref.editorRef} theme={theme} mode={mode} /> */}
+        <MonacoEditor />
       </div>
     </div>
   );

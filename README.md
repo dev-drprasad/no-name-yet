@@ -21,6 +21,8 @@ and of course, some screenshots
 - [ ] Multiple font support (both content/editor)
 - [ ] Should we switch to monaco-editor ??????
 - [ ] Add names for templates
+- [ ] What about facebook share ??
+- [ ] For f\*\*k sake, we need emoji support first
 
 #### References:
 

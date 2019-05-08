@@ -1,0 +1,22 @@
+.react-monaco-editor-container {
+  min-height: 300px;
+  overflow: hidden;
+
+  .monaco-editor {
+    padding: 15px;
+    .lines-content {
+      .view-overlays {
+        div div {
+          box-shadow: none;
+        }
+        .current-line {
+          border: none;
+        }
+      }
+    }
+
+    .decorationsOverviewRuler {
+      display: none;
+    }
+  }
+}
