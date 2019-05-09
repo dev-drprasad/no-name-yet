@@ -16,7 +16,7 @@ const Card = forwardRef(({ cardBGColor, theme, mode }, ref) => {
       <div className="CardInner">
         <div className="Content" spellCheck="false" contentEditable />
         {/* <CodeEditor ref={ref.editorRef} theme={theme} mode={mode} /> */}
-        <MonacoEditor />
+        <MonacoEditor ref={ref} />
       </div>
     </div>
   );

@@ -608,7 +608,7 @@ module.exports = function(webpackEnv) {
         }),
       new MonacoWebpackPlugin({
         // available options are documented at https://github.com/Microsoft/monaco-editor-webpack-plugin#options
-        languages: ["javascript"]
+        languages: ["javascript", "python", "js"]
       })
     ].filter(Boolean),
     // Some libraries import Node modules but don't use them in the browser.

@@ -34,3 +34,5 @@ and of course, some screenshots
 - https://github.com/tsayen/dom-to-image/issues/59
 - https://github.com/securingsincity/react-ace/issues/415
 - https://onlinejournalismblog.com/2015/02/11/how-to-make-a-tweetable-image-in-your-blog-post/
+- https://www.npmjs.com/package/monaco-editor-textmate
+- https://github.com/Microsoft/monaco-editor/issues/171

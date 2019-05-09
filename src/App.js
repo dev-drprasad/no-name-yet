@@ -2,6 +2,10 @@ import React, { useState, useEffect } from "react";
 
 import domtoimage from "dom-to-image";
 
+import { loadWASM } from "onigasm"; // peer dependency of 'monaco-textmate'
+import { Registry } from "monaco-textmate"; // peer dependency
+import { wireTmGrammars } from "monaco-editor-textmate";
+
 import Card1 from "./Card1";
 import Card2 from "./Card2";
 import Card3 from "./Card3";
@@ -9,6 +13,7 @@ import Card3 from "./Card3";
 import "./App.css";
 
 const themes = [
+  { name: "VS Dark", value: "vs-dark" },
   { name: "One Dark", value: "one-dark" },
   { name: "One Dark Vivid", value: "one-dark-vivid" },
   { name: "Monokai", value: "monokai" },
@@ -19,6 +24,10 @@ const themes = [
 ];
 
 const languages = [
+  { name: "JavaScript", value: "js" },
+  { name: "Python", value: "python" }
+];
+const languages_ = [
   { name: "abap", value: "abap" },
   { name: "abc", value: "abc" },
   { name: "actionscript", value: "actionscript" },
@@ -173,6 +182,24 @@ const languages = [
   { name: "yaml", value: "yaml" }
 ];
 
+async function liftOff(monaco, language = "python") {
+  const registry = new Registry({
+    getGrammarDefinition: async scopeName => {
+      return {
+        format: "json",
+        content: await (await fetch(`/${language}.tmLanguage.json`)).text()
+      };
+    }
+  });
+
+  // map of monaco "language id's" to TextMate scopeNames
+  const grammars = new Map();
+  grammars.set("python", "source.python");
+  grammars.set(language, `source.${language}`);
+
+  await wireTmGrammars(monaco, registry, grammars);
+}
+
 const DEFAULT_THEME = themes[0].value;
 const DEFAULT_MODE = "javascript";
 const TWEETER_URL =
@@ -209,6 +236,9 @@ function App() {
   const cardRef = React.useRef(null);
   const editorRef = React.useRef(null);
 
+  const monacoRef = React.useRef(null);
+  const monacoEditorRef = React.useRef(null);
+
   const handleBeforeLoad = ace => {
     ace.config.set("themePath", process.env.PUBLIC_URL + "/js/ace/themes/");
   };
@@ -237,6 +267,18 @@ function App() {
       .catch(() => editor.setTheme(`ace/theme/${theme}`));
   };
 
+  const handleMonacoThemeChange = theme => {
+    if (theme !== "vs-dark") {
+      import(`./monaco-themes/${theme}`)
+        .then(({ default: data }) => {
+          monacoRef.current.editor.defineTheme(theme, data);
+        })
+        .then(() => monacoRef.current.editor.setTheme(theme));
+    } else {
+      monacoRef.current.editor.setTheme(theme);
+    }
+  };
+
   const handleLanguageChange = language => {
     const editor = editorRef.current.editor;
     import(`brace/mode/${language}`)
@@ -244,6 +286,15 @@ function App() {
         editor.getSession().setMode(`ace/mode/${language}`);
       })
       .catch(() => editor.getSession().setMode(`ace/mode/${language}`));
+  };
+
+  const handleMonacoLanguageChange = language => {
+    liftOff(monacoRef.current, language).then(() => {
+      monacoRef.current.editor.setModelLanguage(
+        monacoEditorRef.current.getModel(),
+        language
+      );
+    });
   };
 
   useEffect(() => {
@@ -276,6 +327,10 @@ function App() {
       editor.renderer.setPadding(15);
     }
   }, [selectedCard]);
+
+  useEffect(() => {
+    loadWASM(`/onigasm.wasm`).then(() => liftOff(monacoRef.current));
+  }, []);
   return (
     <div className="App">
       <div className="Sidebar">
@@ -313,7 +368,7 @@ function App() {
             </label>
             <label>
               Code theme:
-              <select onChange={e => handleThemeChange(e.target.value)}>
+              <select onChange={e => handleMonacoThemeChange(e.target.value)}>
                 {themes.map(({ name, value }) => (
                   <option key={value} value={value}>
                     {name}
@@ -323,7 +378,9 @@ function App() {
             </label>
             <label>
               Language:
-              <select onChange={e => handleLanguageChange(e.target.value)}>
+              <select
+                onChange={e => handleMonacoLanguageChange(e.target.value)}
+              >
                 {languages.map(({ name, value }) => (
                   <option key={value} value={value}>
                     {name}
@@ -336,7 +393,7 @@ function App() {
             <Card1
               theme={DEFAULT_THEME}
               mode={DEFAULT_MODE}
-              ref={{ cardRef, editorRef }}
+              ref={{ cardRef, editorRef, monacoRef, monacoEditorRef }}
               cardBGColor={cardBGColor}
             />
           )}
