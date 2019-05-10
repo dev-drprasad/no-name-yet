@@ -2,7 +2,12 @@ import React, { useState } from "react";
 
 import "./ContentEditor.css";
 
-const ContentEditor = ({ className, defaultTextColor, defaultBGColor }) => {
+const ContentEditor = ({
+  className,
+  defaultValue = "",
+  defaultTextColor,
+  defaultBGColor
+}) => {
   const [settings, setSettings] = useState(() => ({
     textColor: defaultTextColor || "white",
     backgroundColor: defaultBGColor || "#ffffff00"
@@ -23,7 +28,9 @@ const ContentEditor = ({ className, defaultTextColor, defaultBGColor }) => {
         style={{ color: settings.textColor }}
         spellCheck="false"
         contentEditable
-      />
+      >
+        {defaultValue}
+      </div>
       <div className="TextFormatBar">
         <span
           role="button"

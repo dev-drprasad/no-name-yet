@@ -83,6 +83,7 @@ const tweet = text => {
 function App() {
   const [cardBGColor, setCardBGColor] = useState("#00a8e8");
   const [selectedCard, setSelecctedCard] = useState(0);
+
   const cardRef = React.useRef(null);
   const editorRef = React.useRef(null);
 

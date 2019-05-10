@@ -40,11 +40,6 @@
   outline: 0;
 }
 
-.App .Card {
-  background-color: rgb(74, 144, 226);
-  padding: 40px;
-}
-
 .App .CodeEditor {
   line-height: 1.3;
 }
