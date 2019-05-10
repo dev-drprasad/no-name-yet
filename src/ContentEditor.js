@@ -28,9 +28,8 @@ const ContentEditor = ({
         style={{ color: settings.textColor }}
         spellCheck="false"
         contentEditable
-      >
-        {defaultValue}
-      </div>
+        dangerouslySetInnerHTML={{ __html: defaultValue }}
+      />
       <div className="TextFormatBar">
         <span
           role="button"

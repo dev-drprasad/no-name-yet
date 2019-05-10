@@ -1,7 +1,31 @@
 import React, { useEffect, forwardRef } from "react";
 import MonacoEditor from "react-monaco-editor";
+import { loadWASM } from "onigasm"; // peer dependency of 'monaco-textmate'
+import { Registry } from "monaco-textmate"; // peer dependency
+import { wireTmGrammars } from "monaco-editor-textmate";
 
 import "./MonacoEditor.css";
+
+async function liftOff(monaco) {
+  const registry = new Registry({
+    getGrammarDefinition: async scopeName => {
+      console.log("scopeName :", scopeName);
+      return {
+        format: "json",
+        content: await (await fetch(
+          `/grammers/${scopeName}.tmLanguage.json`
+        )).text()
+      };
+    }
+  });
+
+  // map of monaco "language id's" to TextMate scopeNames
+  const grammars = new Map();
+  grammars.set("python", "source.python");
+  grammars.set("javascript", "source.js");
+
+  await wireTmGrammars(monaco, registry, grammars);
+}
 
 const Editor = forwardRef(({ mode, theme }, ref) => {
   const editorRef = React.useRef(null);
@@ -14,12 +38,12 @@ const Editor = forwardRef(({ mode, theme }, ref) => {
     ref.monacoEditorRef.current = editor;
 
     const w = editor._domElement.clientWidth;
-    editor._domElement.style.width = `${w + 15}px`;
+    // editor._domElement.style.width = `${w + 30}px`;
 
     editor.focus();
   };
   const editorWillMount = async monaco => {
-    // loadWASM(`/onigasm.wasm`).then(() => liftOff(monacoRef.current));
+    loadWASM("/onigasm.wasm").then(() => liftOff(monaco));
   };
   const onChange = (newValue, e) => {
     if (editorRef.current) {
@@ -50,17 +74,22 @@ const Editor = forwardRef(({ mode, theme }, ref) => {
     }
   };
 
-  // useEffect(() => {
-  //   if (editorRef.current) {
-  //     console.log("editorRef.current :", editorRef.current);
-  //     monacoRef.current.editor.setTheme(theme);
-  //     // editorRef.current.setTheme(theme);
-  //   }
-  // }, [editorRef, theme]);
-  // useEffect(() => {
-  //   // See https://www.npmjs.com/package/onigasm#light-it-up
-  //   liftOff(monacoRef.current, mode);
-  // }, [mode]);
+  useEffect(() => {
+    import(`./monaco-themes/${theme}`)
+      .then(({ default: data }) => {
+        monacoRef.current.editor.defineTheme(theme, data);
+      })
+      .then(() => monacoRef.current.editor.setTheme(theme))
+      .catch(() => monacoRef.current.editor.setTheme(theme));
+  }, [theme]);
+
+  useEffect(() => {
+    monacoRef.current.editor.setModelLanguage(
+      editorRef.current.getModel(),
+      mode
+    );
+  }, [mode]);
+
   const options = {
     selectOnLineNumbers: true,
     minimap: {
@@ -74,15 +103,17 @@ const Editor = forwardRef(({ mode, theme }, ref) => {
     wordWrap: "on",
     selectionHighlight: false,
     lineDecorationsWidth: 0,
-    folding: false
+    folding: false,
+    fontLigatures: true
+    // fontFamily: "Fira Code"
   };
 
   return (
     <MonacoEditor
       width="100%"
       height="100%"
-      language="python"
-      theme="vs-dark"
+      language={mode}
+      theme={theme}
       value="// Type your code"
       options={options}
       onChange={onChange}

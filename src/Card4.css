@@ -1,0 +1,7 @@
+.Card4 .CardInner {
+  display: grid;
+  grid-template-columns: 35% 65%;
+  width: 800px;
+  text-align: initial;
+  box-shadow: 8px 8px 20px 10px rgba(100, 100, 100, 0.15);
+}

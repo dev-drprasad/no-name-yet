@@ -2,13 +2,10 @@ import React, { useState, useEffect } from "react";
 
 import domtoimage from "dom-to-image";
 
-import { loadWASM } from "onigasm"; // peer dependency of 'monaco-textmate'
-import { Registry } from "monaco-textmate"; // peer dependency
-import { wireTmGrammars } from "monaco-editor-textmate";
-
 import Card1 from "./Card1";
 import Card2 from "./Card2";
 import Card3 from "./Card3";
+import Card4 from "./Card4";
 import languages from "./ace-modes";
 
 import "brace/mode/javascript"; // mandatory. else can't input in editor
@@ -25,29 +22,6 @@ const themes = [
   { name: "Solarized Light", value: "solarized_light" },
   { name: "Dracula", value: "dracula" }
 ];
-
-// const languages = [
-//   { name: "JavaScript", value: "js" },
-//   { name: "Python", value: "python" }
-// ];
-
-async function liftOff(monaco, language = "python") {
-  const registry = new Registry({
-    getGrammarDefinition: async scopeName => {
-      return {
-        format: "json",
-        content: await (await fetch(`/${language}.tmLanguage.json`)).text()
-      };
-    }
-  });
-
-  // map of monaco "language id's" to TextMate scopeNames
-  const grammars = new Map();
-  grammars.set("python", "source.python");
-  grammars.set(language, `source.${language}`);
-
-  await wireTmGrammars(monaco, registry, grammars);
-}
 
 const DEFAULT_THEME = themes[0].value;
 const DEFAULT_MODE = "javascript";
@@ -87,9 +61,6 @@ function App() {
   const cardRef = React.useRef(null);
   const editorRef = React.useRef(null);
 
-  const monacoRef = React.useRef(null);
-  const monacoEditorRef = React.useRef(null);
-
   const handleBeforeLoad = ace => {
     ace.config.set("themePath", process.env.PUBLIC_URL + "/js/ace/themes/");
   };
@@ -118,18 +89,6 @@ function App() {
       .catch(() => editor.setTheme(`ace/theme/${theme}`));
   };
 
-  const handleMonacoThemeChange = theme => {
-    if (theme !== "vs-dark") {
-      import(`./monaco-themes/${theme}`)
-        .then(({ default: data }) => {
-          monacoRef.current.editor.defineTheme(theme, data);
-        })
-        .then(() => monacoRef.current.editor.setTheme(theme));
-    } else {
-      monacoRef.current.editor.setTheme(theme);
-    }
-  };
-
   const handleLanguageChange = language => {
     const editor = editorRef.current.editor;
     import(`brace/mode/${language}`)
@@ -137,15 +96,6 @@ function App() {
         editor.getSession().setMode(`ace/mode/${language}`);
       })
       .catch(() => editor.getSession().setMode(`ace/mode/${language}`));
-  };
-
-  const handleMonacoLanguageChange = language => {
-    liftOff(monacoRef.current, language).then(() => {
-      monacoRef.current.editor.setModelLanguage(
-        monacoEditorRef.current.getModel(),
-        language
-      );
-    });
   };
 
   useEffect(() => {
@@ -179,10 +129,6 @@ function App() {
     }
   }, [selectedCard]);
 
-  // useEffect(() => {
-  //   loadWASM(`/onigasm.wasm`).then(() => liftOff(monacoRef.current));
-  // }, []);
-
   return (
     <div className="App">
       <div className="Sidebar">
@@ -204,6 +150,9 @@ function App() {
               src={process.env.PUBLIC_URL + "/images/card3.png"}
               alt="template 3"
             />
+          </li>
+          <li onClick={() => setSelecctedCard(3)}>
+            Monaco editor (experimental)
           </li>
         </ul>
       </div>
@@ -243,7 +192,7 @@ function App() {
             <Card1
               theme={DEFAULT_THEME}
               mode={DEFAULT_MODE}
-              ref={{ cardRef, editorRef, monacoRef, monacoEditorRef }}
+              ref={{ cardRef, editorRef }}
               cardBGColor={cardBGColor}
             />
           )}
@@ -257,6 +206,9 @@ function App() {
           )}
           {selectedCard === 2 && (
             <Card3 ref={cardRef} cardBGColor={cardBGColor} />
+          )}
+          {selectedCard === 3 && (
+            <Card4 ref={cardRef} cardBGColor={cardBGColor} />
           )}
         </div>
         <div>
