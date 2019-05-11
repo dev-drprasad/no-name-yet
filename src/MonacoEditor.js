@@ -1,4 +1,4 @@
-import React, { useEffect, forwardRef } from "react";
+import React, { useEffect, forwardRef, memo } from "react";
 import MonacoEditor from "react-monaco-editor";
 import { loadWASM } from "onigasm"; // peer dependency of 'monaco-textmate'
 import { Registry } from "monaco-textmate"; // peer dependency
@@ -104,7 +104,8 @@ const Editor = forwardRef(({ mode, theme }, ref) => {
     selectionHighlight: false,
     lineDecorationsWidth: 0,
     folding: false,
-    fontLigatures: true
+    fontLigatures: true,
+    contextmenu: false
     // fontFamily: "Fira Code"
   };
 
