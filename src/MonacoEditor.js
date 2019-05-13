@@ -27,9 +27,10 @@ async function liftOff(monaco) {
 
 const Editor = forwardRef(({ mode, theme }, ref) => {
   const [value, setValue] = useState("// Type your code");
+  const [editorPaddingColor, setEditorPaddingColor] = useState("#ffffff00");
   const editorRef = React.useRef(null);
   const monacoRef = React.useRef(null);
-  const numLines = React.useRef(null);
+
   const editorDidMount = (editor, monaco) => {
     editorRef.current = editor;
     monacoRef.current = monaco;
@@ -51,6 +52,8 @@ const Editor = forwardRef(({ mode, theme }, ref) => {
   useEffect(() => {
     import(`./monaco-themes/${theme}`)
       .then(({ default: data }) => {
+        console.log("theme, data :", theme, data);
+        setEditorPaddingColor(data.colors["editor.background"]);
         monacoRef.current.editor.defineTheme(theme, data);
       })
       .then(() => monacoRef.current.editor.setTheme(theme))
@@ -91,17 +94,19 @@ const Editor = forwardRef(({ mode, theme }, ref) => {
   };
 
   return (
-    <MonacoEditor
-      width="100%"
-      height="100%"
-      language={mode}
-      theme={theme}
-      value={value}
-      options={options}
-      onChange={onChange}
-      editorWillMount={editorWillMount}
-      editorDidMount={editorDidMount}
-    />
+    <div style={{ padding: 15, backgroundColor: editorPaddingColor }}>
+      <MonacoEditor
+        width="100%"
+        height="100%"
+        language={mode}
+        theme={theme}
+        value={value}
+        options={options}
+        onChange={onChange}
+        editorWillMount={editorWillMount}
+        editorDidMount={editorDidMount}
+      />
+    </div>
   );
 });
 
