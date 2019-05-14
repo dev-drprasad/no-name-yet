@@ -20,21 +20,20 @@ const themes = [
   { name: "Tomorrow", value: "tomorrow" },
   { name: "XCode", value: "xcode" },
   { name: "Solarized Light", value: "solarized_light" },
-  { name: "Dracula", value: "dracula" }
+  { name: "Dracula", value: "dracula" },
 ];
 
 const DEFAULT_THEME = themes[0].value;
 const DEFAULT_MODE = "javascript";
 
-const TWEETER_URL =
-  process.env.REACT_APP_CUSTOM_ENV_TWEETER_URL || window.location.href;
+const TWEETER_URL = process.env.REACT_APP_CUSTOM_ENV_TWEETER_URL || window.location.href;
 
 const getTwitterEmbeddableImageUrl = blob => {
   const form = new FormData();
   form.append("file", blob);
   return fetch(new URL("/api/tweet", TWEETER_URL), {
     method: "POST",
-    body: form
+    body: form,
   })
     .then(res => res.json())
     .then(result => result.imageUrl);
@@ -47,16 +46,12 @@ const tweet = text => {
   const top = (window.outerHeight - height) / 2;
   const opts = `status=1,width=${width},height=${height},top=${top},left=${left}`;
 
-  window.open(
-    `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`,
-    "twitter",
-    opts
-  );
+  window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, "twitter", opts);
 };
 
 function App() {
   const [cardBGColor, setCardBGColor] = useState("#00a8e8");
-  const [selectedCard, setSelecctedCard] = useState(0);
+  const [selectedCard, setSelecctedCard] = useState(3);
 
   const cardRef = React.useRef(null);
   const editorRef = React.useRef(null);
@@ -121,7 +116,7 @@ function App() {
       const editor = editorRef.current.editor;
 
       editor.setOptions({
-        fontFamily: "Fira Code"
+        fontFamily: "Fira Code",
       });
 
       editor.renderer.setScrollMargin(15, 15, 15, 15);
@@ -134,26 +129,15 @@ function App() {
       <div className="Sidebar">
         <ul className="CardList">
           <li onClick={() => setSelecctedCard(0)}>
-            <img
-              src={process.env.PUBLIC_URL + "/images/card1.png"}
-              alt="template 1"
-            />
+            <img src={process.env.PUBLIC_URL + "/images/card1.png"} alt="template 1" />
           </li>
           <li onClick={() => setSelecctedCard(1)}>
-            <img
-              src={process.env.PUBLIC_URL + "/images/card2.png"}
-              alt="template 2"
-            />
+            <img src={process.env.PUBLIC_URL + "/images/card2.png"} alt="template 2" />
           </li>
           <li onClick={() => setSelecctedCard(2)}>
-            <img
-              src={process.env.PUBLIC_URL + "/images/card3.png"}
-              alt="template 3"
-            />
+            <img src={process.env.PUBLIC_URL + "/images/card3.png"} alt="template 3" />
           </li>
-          <li onClick={() => setSelecctedCard(3)}>
-            Monaco editor (experimental)
-          </li>
+          <li onClick={() => setSelecctedCard(3)}>Monaco editor (experimental)</li>
         </ul>
       </div>
       <main>
@@ -204,12 +188,8 @@ function App() {
               cardBGColor={cardBGColor}
             />
           )}
-          {selectedCard === 2 && (
-            <Card3 ref={cardRef} cardBGColor={cardBGColor} />
-          )}
-          {selectedCard === 3 && (
-            <Card4 ref={cardRef} cardBGColor={cardBGColor} />
-          )}
+          {selectedCard === 2 && <Card3 ref={cardRef} cardBGColor={cardBGColor} />}
+          {selectedCard === 3 && <Card4 ref={cardRef} cardBGColor={cardBGColor} />}
         </div>
         <div>
           <button type="button" onClick={download}>

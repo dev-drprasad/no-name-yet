@@ -19,7 +19,7 @@ const Card = forwardRef(({ cardBGColor }, ref) => {
         ref={ref}
         style={{
           backgroundColor: cardBGColor,
-          padding: `${padding.y}px ${padding.x}px`
+          padding: `${padding.y}px ${padding.x}px`,
         }}
       >
         <div className="CardInner">

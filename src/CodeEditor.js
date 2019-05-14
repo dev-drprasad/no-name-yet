@@ -14,7 +14,7 @@ const CodeEditor = forwardRef(({ theme, mode }, ref) => {
       editor.setOptions({
         fontFamily: "Fira Code",
         theme: `ace/theme/${theme}`,
-        mode: `ace/mode/${mode}`
+        mode: `ace/mode/${mode}`,
       });
 
       editor.renderer.setScrollMargin(15, 15, 15, 15);

@@ -5,7 +5,11 @@ module.exports = function(app) {
     proxy("/api/tweet", {
       target: "https://tweeter.dev-drprasad.now.sh",
       pathRewrite: { "^/api/tweet": "/handler.go" },
-      changeOrigin: true
+      changeOrigin: true,
     })
   );
 };
+
+function add(a, b) {
+  return a + b;
+}

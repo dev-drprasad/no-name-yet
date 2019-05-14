@@ -2,15 +2,10 @@ import React, { useState } from "react";
 
 import "./ContentEditor.css";
 
-const ContentEditor = ({
-  className,
-  defaultValue = "",
-  defaultTextColor,
-  defaultBGColor
-}) => {
+const ContentEditor = ({ className, defaultValue = "", defaultTextColor, defaultBGColor }) => {
   const [settings, setSettings] = useState(() => ({
     textColor: defaultTextColor || "white",
-    backgroundColor: defaultBGColor || "#ffffff00"
+    backgroundColor: defaultBGColor || "#ffffff00",
   }));
 
   const handleTextColorChange = e => {

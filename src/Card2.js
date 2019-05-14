@@ -20,7 +20,7 @@ const Card = forwardRef(({ cardBGColor, theme, mode }, ref) => {
         ref={ref.cardRef}
         style={{
           backgroundColor: cardBGColor,
-          padding: `${padding.y}px ${padding.x}px`
+          padding: `${padding.y}px ${padding.x}px`,
         }}
       >
         <ContentEditor className="CardHeading" />

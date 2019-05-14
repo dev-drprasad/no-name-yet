@@ -13,12 +13,13 @@ import "./Card4.css";
 
 const languages = [
   { name: "JavaScript", value: "javascript" },
-  { name: "Python", value: "python" }
+  { name: "Python", value: "python" },
 ];
 
 const themes = [
+  { name: "SynthWave '84", value: "synthwave" },
   { name: "One Dark", value: "one-dark" },
-  { name: "VS Dark", value: "vs-dark" }
+  { name: "VS Dark", value: "vs-dark" },
 ];
 
 const Card = forwardRef(({ cardBGColor }, ref) => {
@@ -65,16 +66,12 @@ const Card = forwardRef(({ cardBGColor }, ref) => {
         ref={ref}
         style={{
           backgroundColor: cardBGColor,
-          padding: `${padding.y}px ${padding.x}px`
+          padding: `${padding.y}px ${padding.x}px`,
         }}
       >
         <div className="CardInner">
           <ContentEditor defaultBGColor="white" defaultTextColor="#586e75" />
-          <MonacoEditor
-            theme={theme}
-            mode={mode}
-            ref={{ monacoRef, monacoEditorRef }}
-          />
+          <MonacoEditor theme={theme} mode={mode} ref={{ monacoRef, monacoEditorRef }} />
         </div>
       </div>
     </>

@@ -17,10 +17,29 @@ async function liftOff(monaco) {
     },
   });
 
+  registry.loadGrammar("source.js").then(grammar => {
+    // at this point `grammar` is available...
+    var lineTokens = grammar.tokenizeLine("function add(num1, num2) { return num1 + num2 };");
+    for (var i = 0; i < lineTokens.tokens.length; i++) {
+      var token = lineTokens.tokens[i];
+      console.log(
+        "Token from " + token.startIndex + " to " + token.endIndex + " with scopes " + token.scopes
+      );
+    }
+  });
+
   // map of monaco "language id's" to TextMate scopeNames
   const grammars = new Map();
-  grammars.set("python", "source.python");
+  // grammars.set("python", "source.python");
   grammars.set("javascript", "source.js");
+
+  const javascriptConfig = {
+    id: "javascript",
+    extensions: [".js"],
+    aliases: [],
+    mimetypes: ["text/javascript"],
+  };
+  monaco.languages.register(javascriptConfig);
 
   await wireTmGrammars(monaco, registry, grammars);
 }
@@ -34,6 +53,7 @@ const Editor = forwardRef(({ mode, theme }, ref) => {
   const editorDidMount = (editor, monaco) => {
     editorRef.current = editor;
     monacoRef.current = monaco;
+    console.log("editor, monaco :", editor, monaco);
     ref.monacoRef.current = monaco;
     ref.monacoEditorRef.current = editor;
 
@@ -42,7 +62,7 @@ const Editor = forwardRef(({ mode, theme }, ref) => {
 
     editor.focus();
   };
-  const editorWillMount = async monaco => {
+  const editorWillMount = monaco => {
     loadWASM("/onigasm.wasm").then(() => liftOff(monaco));
   };
   const onChange = (newValue, e) => {
@@ -50,18 +70,22 @@ const Editor = forwardRef(({ mode, theme }, ref) => {
   };
 
   useEffect(() => {
-    import(`./monaco-themes/${theme}`)
-      .then(({ default: data }) => {
-        console.log("theme, data :", theme, data);
-        setEditorPaddingColor(data.colors["editor.background"]);
-        monacoRef.current.editor.defineTheme(theme, data);
-      })
-      .then(() => monacoRef.current.editor.setTheme(theme))
-      .catch(() => monacoRef.current.editor.setTheme(theme));
+    if (monacoRef.current) {
+      import(`./monaco-themes/${theme}`)
+        .then(({ default: data }) => {
+          console.log("theme, data :", theme, data);
+          setEditorPaddingColor(data.colors["editor.background"]);
+          monacoRef.current.editor.defineTheme(theme, data);
+        })
+        .then(() => monacoRef.current.editor.setTheme(theme))
+        .catch(() => monacoRef.current.editor.setTheme(theme));
+    }
   }, [theme]);
 
   useEffect(() => {
-    monacoRef.current.editor.setModelLanguage(editorRef.current.getModel(), mode);
+    if (monacoRef.current) {
+      monacoRef.current.editor.setModelLanguage(editorRef.current.getModel(), mode);
+    }
   }, [mode]);
 
   useEffect(() => {
@@ -98,8 +122,8 @@ const Editor = forwardRef(({ mode, theme }, ref) => {
       <MonacoEditor
         width="100%"
         height="100%"
-        language={mode}
         theme={theme}
+        language={mode}
         value={value}
         options={options}
         onChange={onChange}
