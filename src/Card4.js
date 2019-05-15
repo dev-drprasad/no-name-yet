@@ -1,8 +1,4 @@
-import React, { forwardRef, useState, useEffect } from "react";
-
-import { loadWASM } from "onigasm"; // peer dependency of 'monaco-textmate'
-import { Registry } from "monaco-textmate"; // peer dependency
-import { wireTmGrammars } from "monaco-editor-textmate";
+import React, { forwardRef, useState } from "react";
 
 import Padding from "./Padding";
 
@@ -19,7 +15,6 @@ const languages = [
 const themes = [
   { name: "SynthWave '84", value: "synthwave" },
   { name: "One Dark", value: "one-dark" },
-  { name: "VS Dark", value: "vs-dark" },
 ];
 
 const Card = forwardRef(({ cardBGColor }, ref) => {

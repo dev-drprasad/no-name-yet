@@ -1,10 +1,29 @@
-import React, { useEffect, forwardRef, memo, useState } from "react";
+import React, { useEffect, forwardRef, useState } from "react";
 import MonacoEditor from "react-monaco-editor";
 import { loadWASM } from "onigasm"; // peer dependency of 'monaco-textmate'
 import { Registry } from "monaco-textmate"; // peer dependency
 import { wireTmGrammars } from "monaco-editor-textmate";
 
 import "./MonacoEditor.css";
+
+// function add(num1, num2) {
+//   return num1 + num2;
+// }
+
+const languagesToRegister = [
+  {
+    id: "javascript",
+    extensions: [".js"],
+    aliases: [],
+    mimetypes: ["text/javascript"],
+  },
+  {
+    id: "python",
+    extensions: [".py"],
+    aliases: [],
+    mimetypes: ["text/python"],
+  },
+];
 
 async function liftOff(monaco) {
   const registry = new Registry({
@@ -17,35 +36,29 @@ async function liftOff(monaco) {
     },
   });
 
-  registry.loadGrammar("source.js").then(grammar => {
-    // at this point `grammar` is available...
-    var lineTokens = grammar.tokenizeLine("function add(num1, num2) { return num1 + num2 };");
-    for (var i = 0; i < lineTokens.tokens.length; i++) {
-      var token = lineTokens.tokens[i];
-      console.log(
-        "Token from " + token.startIndex + " to " + token.endIndex + " with scopes " + token.scopes
-      );
-    }
-  });
+  // registry.loadGrammar("source.js").then(grammar => {
+  //   // at this point `grammar` is available...
+  //   var lineTokens = grammar.tokenizeLine("function add(num1, num2) { return num1 + num2 };");
+  //   for (var i = 0; i < lineTokens.tokens.length; i++) {
+  //     var token = lineTokens.tokens[i];
+  //     console.log(
+  //       "Token from " + token.startIndex + " to " + token.endIndex + " with scopes " + token.scopes
+  //     );
+  //   }
+  // });
 
   // map of monaco "language id's" to TextMate scopeNames
   const grammars = new Map();
-  // grammars.set("python", "source.python");
+  grammars.set("python", "source.python");
   grammars.set("javascript", "source.js");
 
-  const javascriptConfig = {
-    id: "javascript",
-    extensions: [".js"],
-    aliases: [],
-    mimetypes: ["text/javascript"],
-  };
-  monaco.languages.register(javascriptConfig);
+  languagesToRegister.forEach(language => void monaco.languages.register(language));
 
   await wireTmGrammars(monaco, registry, grammars);
 }
 
 const Editor = forwardRef(({ mode, theme }, ref) => {
-  const [value, setValue] = useState("// Type your code");
+  const [value, setValue] = useState("function add(num1, num2) { return num1 + num2 };");
   const [editorPaddingColor, setEditorPaddingColor] = useState("#ffffff00");
   const editorRef = React.useRef(null);
   const monacoRef = React.useRef(null);
@@ -63,7 +76,7 @@ const Editor = forwardRef(({ mode, theme }, ref) => {
     editor.focus();
   };
   const editorWillMount = monaco => {
-    loadWASM("/onigasm.wasm").then(() => liftOff(monaco));
+    liftOff(monaco);
   };
   const onChange = (newValue, e) => {
     setValue(newValue);
@@ -113,7 +126,7 @@ const Editor = forwardRef(({ mode, theme }, ref) => {
     folding: false,
     fontLigatures: true,
     contextmenu: false,
-    fontFamily: "Fira Code",
+    // fontFamily: "Fira Code",
     fontSize: 15,
   };
 

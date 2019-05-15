@@ -36,3 +36,5 @@ and of course, some screenshots
 - https://onlinejournalismblog.com/2015/02/11/how-to-make-a-tweetable-image-in-your-blog-post/
 - https://www.npmjs.com/package/monaco-editor-textmate
 - https://github.com/Microsoft/monaco-editor/issues/171
+- https://code.visualstudio.com/blogs/2017/02/08/syntax-highlighting-optimizations
+- https://github.com/microsoft/monaco-editor/issues/1070

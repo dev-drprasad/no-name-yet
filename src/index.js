@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
+import { loadWASM } from "onigasm";
 
 // ReactDOM.render(<App />, document.getElementById("root"));
 
@@ -11,7 +12,10 @@ import * as serviceWorker from "./serviceWorker";
 //   const monacoEditorRef = React.useRef(null);
 //   return <MonacoEditor ref={{ monacoRef, monacoEditorRef }} />;
 // };
-ReactDOM.render(<App />, document.getElementById("root"));
+
+loadWASM("/onigasm.wasm").then(() => {
+  ReactDOM.render(<App />, document.getElementById("root"));
+});
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
