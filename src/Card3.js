@@ -1,7 +1,7 @@
 import React, { forwardRef, useState } from "react";
 
 import ContentEditor from "./ContentEditor";
-import Padding from "./Padding";
+import Options from "./Options";
 import "./Card3.css";
 
 const defaultHeading = "Banana Monkey Jungle problem";
@@ -9,11 +9,18 @@ const defaultTextArea = `I think the lack of reusability comes in object oriente
 
                                                                                                    -- Joe Armstrong`;
 
-const Card = forwardRef(({ cardBGColor }, ref) => {
-  const [padding, setPadding] = useState({ x: 40, y: 40 });
+const Card = forwardRef((_, ref) => {
+  const [options, setOptions] = useState({
+    padding: { x: 40, y: 40 },
+    theme: "one-dark",
+    mode: "javascript",
+    cardBGColor: "#00a8f0",
+  });
+
+  const { padding, cardBGColor } = options;
   return (
     <>
-      <Padding defaults={padding} onChange={padding => setPadding(padding)} />
+      <Options onChange={options => setOptions(options)} />
       <div
         className="Card3"
         ref={ref}

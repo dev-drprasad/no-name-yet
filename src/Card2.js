@@ -8,13 +8,20 @@ import "./Card2.css";
 import ContentEditor from "./ContentEditor";
 import CodeEditor from "./CodeEditor";
 
-import Padding from "./Padding";
+import Options from "./Options";
 
-const Card = forwardRef(({ cardBGColor, theme, mode }, ref) => {
-  const [padding, setPadding] = useState({ x: 40, y: 40 });
+const Card = forwardRef((_, ref) => {
+  const [options, setOptions] = useState({
+    padding: { x: 40, y: 40 },
+    theme: "one-dark",
+    mode: "javascript",
+    cardBGColor: "#00a8f0",
+  });
+
+  const { padding, theme, mode, cardBGColor } = options;
   return (
     <>
-      <Padding defaults={padding} onChange={padding => setPadding(padding)} />
+      <Options onChange={options => setOptions(options)} />
       <div
         className="Card2"
         ref={ref.cardRef}

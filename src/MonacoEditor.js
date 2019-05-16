@@ -1,8 +1,8 @@
 import React, { useEffect, forwardRef, useState } from "react";
 import MonacoEditor from "react-monaco-editor";
-import { loadWASM } from "onigasm"; // peer dependency of 'monaco-textmate'
-import { Registry } from "monaco-textmate"; // peer dependency
+import { Registry } from "monaco-textmate";
 import { wireTmGrammars } from "monaco-editor-textmate";
+import languagesToRegister from "./monaco-languages";
 
 import "./MonacoEditor.css";
 
@@ -10,35 +10,27 @@ import "./MonacoEditor.css";
 //   return num1 + num2;
 // }
 
-const languagesToRegister = [
-  {
-    id: "javascript",
-    extensions: [".js"],
-    aliases: [],
-    mimetypes: ["text/javascript"],
+const registry = new Registry({
+  getGrammarDefinition: async scopeName => {
+    console.log("scopeName :", scopeName);
+    const [languageId] = languagesToRegister.find(([, scope]) => scope === scopeName);
+    console.log("languageId :", languageId);
+    return {
+      format: "json",
+      content: await (await fetch(`/grammers/${languageId}.tmLanguage.json`)).text(),
+    };
   },
-  {
-    id: "python",
-    extensions: [".py"],
-    aliases: [],
-    mimetypes: ["text/python"],
-  },
-];
+});
+async function liftOff(monaco, languageId) {
+  // map of monaco "language id's" to TextMate scopeNames
+  const [, scope] = languagesToRegister.find(([id]) => id === languageId);
 
-async function liftOff(monaco) {
-  const registry = new Registry({
-    getGrammarDefinition: async scopeName => {
-      console.log("scopeName :", scopeName);
-      return {
-        format: "json",
-        content: await (await fetch(`/grammers/${scopeName}.tmLanguage.json`)).text(),
-      };
-    },
-  });
+  const grammers = new Map();
+  grammers.set(languageId, scope);
 
-  // registry.loadGrammar("source.js").then(grammar => {
+  // registry.loadGrammar("source.cpp").then(grammar => {
   //   // at this point `grammar` is available...
-  //   var lineTokens = grammar.tokenizeLine("function add(num1, num2) { return num1 + num2 };");
+  //   var lineTokens = grammar.tokenizeLine('std::fstream out("file.txt", std::ios::out);');
   //   for (var i = 0; i < lineTokens.tokens.length; i++) {
   //     var token = lineTokens.tokens[i];
   //     console.log(
@@ -47,14 +39,7 @@ async function liftOff(monaco) {
   //   }
   // });
 
-  // map of monaco "language id's" to TextMate scopeNames
-  const grammars = new Map();
-  grammars.set("python", "source.python");
-  grammars.set("javascript", "source.js");
-
-  languagesToRegister.forEach(language => void monaco.languages.register(language));
-
-  await wireTmGrammars(monaco, registry, grammars);
+  await wireTmGrammars(monaco, registry, grammers);
 }
 
 const Editor = forwardRef(({ mode, theme }, ref) => {
@@ -76,7 +61,9 @@ const Editor = forwardRef(({ mode, theme }, ref) => {
     editor.focus();
   };
   const editorWillMount = monaco => {
-    liftOff(monaco);
+    languagesToRegister.forEach(
+      ([languageId]) => void monaco.languages.register({ id: languageId })
+    );
   };
   const onChange = (newValue, e) => {
     setValue(newValue);
@@ -96,8 +83,12 @@ const Editor = forwardRef(({ mode, theme }, ref) => {
   }, [theme]);
 
   useEffect(() => {
-    if (monacoRef.current) {
-      monacoRef.current.editor.setModelLanguage(editorRef.current.getModel(), mode);
+    const monaco = monacoRef.current;
+    if (monaco) {
+      console.log("monaco, mode :", monaco, mode);
+      liftOff(monaco, mode).then(
+        () => void monaco.editor.setModelLanguage(editorRef.current.getModel(), mode)
+      );
     }
   }, [mode]);
 

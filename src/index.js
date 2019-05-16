@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
-import { loadWASM } from "onigasm";
+import { loadWASM } from "onigasm"; // peer dependency of 'monaco-textmate'
 
 // ReactDOM.render(<App />, document.getElementById("root"));
 

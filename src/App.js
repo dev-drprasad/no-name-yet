@@ -6,25 +6,10 @@ import Card1 from "./Card1";
 import Card2 from "./Card2";
 import Card3 from "./Card3";
 import Card4 from "./Card4";
-import languages from "./ace-modes";
 
 import "brace/mode/javascript"; // mandatory. else can't input in editor
 
 import "./App.css";
-
-const themes = [
-  // { name: "VS Dark", value: "vs-dark" },
-  { name: "One Dark", value: "one-dark" },
-  { name: "One Dark Vivid", value: "one-dark-vivid" },
-  { name: "Monokai", value: "monokai" },
-  { name: "Tomorrow", value: "tomorrow" },
-  { name: "XCode", value: "xcode" },
-  { name: "Solarized Light", value: "solarized_light" },
-  { name: "Dracula", value: "dracula" },
-];
-
-const DEFAULT_THEME = themes[0].value;
-const DEFAULT_MODE = "javascript";
 
 const TWEETER_URL = process.env.REACT_APP_CUSTOM_ENV_TWEETER_URL || window.location.href;
 
@@ -50,15 +35,14 @@ const tweet = text => {
 };
 
 function App() {
-  const [cardBGColor, setCardBGColor] = useState("#00a8e8");
   const [selectedCard, setSelecctedCard] = useState(3);
 
   const cardRef = React.useRef(null);
   const editorRef = React.useRef(null);
 
-  const handleBeforeLoad = ace => {
-    ace.config.set("themePath", process.env.PUBLIC_URL + "/js/ace/themes/");
-  };
+  // const handleBeforeLoad = ace => {
+  //   ace.config.set("themePath", process.env.PUBLIC_URL + "/js/ace/themes/");
+  // };
   const download = () => {
     domtoimage.toBlob(cardRef.current).then(blob => {
       const a = document.createElement("a");
@@ -73,24 +57,6 @@ function App() {
       .toBlob(cardRef.current)
       .then(getTwitterEmbeddableImageUrl)
       .then(tweet);
-  };
-
-  const handleThemeChange = theme => {
-    const editor = editorRef.current.editor;
-    import(`brace/theme/${theme}`)
-      .then(() => {
-        editor.setTheme(`ace/theme/${theme}`);
-      })
-      .catch(() => editor.setTheme(`ace/theme/${theme}`));
-  };
-
-  const handleLanguageChange = language => {
-    const editor = editorRef.current.editor;
-    import(`brace/mode/${language}`)
-      .then(() => {
-        editor.getSession().setMode(`ace/mode/${language}`);
-      })
-      .catch(() => editor.getSession().setMode(`ace/mode/${language}`));
   };
 
   useEffect(() => {
@@ -110,19 +76,19 @@ function App() {
         .forEach(el => el.removeEventListener("paste", handler));
   }, [selectedCard]);
 
-  useEffect(() => {
-    // some cards wont have editors
-    if (editorRef.current) {
-      const editor = editorRef.current.editor;
+  // useEffect(() => {
+  //   // some cards wont have editors
+  //   if (editorRef.current) {
+  //     const editor = editorRef.current.editor;
 
-      editor.setOptions({
-        fontFamily: "Fira Code",
-      });
+  //     editor.setOptions({
+  //       fontFamily: "Fira Code",
+  //     });
 
-      editor.renderer.setScrollMargin(15, 15, 15, 15);
-      editor.renderer.setPadding(15);
-    }
-  }, [selectedCard]);
+  //     editor.renderer.setScrollMargin(15, 15, 15, 15);
+  //     editor.renderer.setPadding(15);
+  //   }
+  // }, [selectedCard]);
 
   return (
     <div className="App">
@@ -142,54 +108,10 @@ function App() {
       </div>
       <main>
         <div className="CardWrapper-CropBug">
-          <div className="Options">
-            <label>
-              Background color:
-              <input
-                type="color"
-                value={cardBGColor}
-                onChange={e => setCardBGColor(e.target.value)}
-              />
-            </label>
-            <label>
-              Code theme:
-              <select onChange={e => handleThemeChange(e.target.value)}>
-                {themes.map(({ name, value }) => (
-                  <option key={value} value={value}>
-                    {name}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label>
-              Language:
-              <select onChange={e => handleLanguageChange(e.target.value)}>
-                {languages.map(({ name, value }) => (
-                  <option key={value} value={value}>
-                    {name}
-                  </option>
-                ))}
-              </select>
-            </label>
-          </div>
-          {selectedCard === 0 && (
-            <Card1
-              theme={DEFAULT_THEME}
-              mode={DEFAULT_MODE}
-              ref={{ cardRef, editorRef }}
-              cardBGColor={cardBGColor}
-            />
-          )}
-          {selectedCard === 1 && (
-            <Card2
-              theme={DEFAULT_THEME}
-              mode={DEFAULT_MODE}
-              ref={{ cardRef, editorRef }}
-              cardBGColor={cardBGColor}
-            />
-          )}
-          {selectedCard === 2 && <Card3 ref={cardRef} cardBGColor={cardBGColor} />}
-          {selectedCard === 3 && <Card4 ref={cardRef} cardBGColor={cardBGColor} />}
+          {selectedCard === 0 && <Card1 ref={{ cardRef, editorRef }} />}
+          {selectedCard === 1 && <Card2 ref={{ cardRef, editorRef }} />}
+          {selectedCard === 2 && <Card3 ref={cardRef} />}
+          {selectedCard === 3 && <Card4 ref={cardRef} />}
         </div>
         <div>
           <button type="button" onClick={download}>
