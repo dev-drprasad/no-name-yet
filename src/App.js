@@ -90,19 +90,23 @@ function App() {
   //   }
   // }, [selectedCard]);
 
+  const templates = [0, 1, 2];
+
   return (
     <div className="App">
       <div className="Sidebar">
         <ul className="CardList">
-          <li onClick={() => setSelecctedCard(0)}>
-            <img src={process.env.PUBLIC_URL + "/images/card1.png"} alt="template 1" />
-          </li>
-          <li onClick={() => setSelecctedCard(1)}>
-            <img src={process.env.PUBLIC_URL + "/images/card2.png"} alt="template 2" />
-          </li>
-          <li onClick={() => setSelecctedCard(2)}>
-            <img src={process.env.PUBLIC_URL + "/images/card3.png"} alt="template 3" />
-          </li>
+          {templates.map(id => (
+            <li
+              className={selectedCard === id ? "Active" : ""}
+              onClick={() => setSelecctedCard(id)}
+            >
+              <img
+                src={process.env.PUBLIC_URL + `/images/card${id + 1}.png`}
+                alt={`template ${id + 1}`}
+              />
+            </li>
+          ))}
           <li onClick={() => setSelecctedCard(3)}>Monaco editor (experimental)</li>
         </ul>
       </div>

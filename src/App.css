@@ -10,6 +10,10 @@
 }
 .App .CardList li {
   margin-bottom: 15px;
+
+  &.Active {
+    border: 3px solid #00a8f0;
+  }
 }
 .App .CardList li img {
   width: 100%;
@@ -26,7 +30,7 @@
   grid-template-columns: 35% 65%;
   width: 800px;
   text-align: initial;
-  box-shadow: 8px 8px 20px 10px rgba(100, 100, 100, 0.15);
+  box-shadow: 8px 8px 30px 10px rgba(100, 100, 100, 0.3);
 }
 
 .App .Options {

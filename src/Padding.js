@@ -13,9 +13,9 @@ const Padding = ({ defaults, onChange }) => {
     onChange({ x: paddingRef.current.x, y: paddingY });
   };
   return (
-    <div>
+    <>
       <label>
-        Padding (horizontal):
+        Padding (X):
         <input
           type="number"
           onChange={e => handlePaddingXChange(e.target.value)}
@@ -25,7 +25,7 @@ const Padding = ({ defaults, onChange }) => {
         />
       </label>
       <label>
-        Padding (vertical):
+        Padding (Y):
         <input
           type="number"
           onChange={e => handlePaddingYChange(e.target.value)}
@@ -34,7 +34,7 @@ const Padding = ({ defaults, onChange }) => {
           max={120}
         />
       </label>
-    </div>
+    </>
   );
 };
 
