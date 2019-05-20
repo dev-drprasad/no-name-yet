@@ -1,14 +1,10 @@
 import React, { useEffect, forwardRef, useState } from "react";
-import MonacoEditor from "react-monaco-editor";
+import MonacoReactComponent from "./MonacoReactComponent";
 import { Registry } from "monaco-textmate";
 import { wireTmGrammars } from "monaco-editor-textmate";
 import languagesToRegister from "./monaco-languages";
 
 import "./MonacoEditor.css";
-
-// function add(num1, num2) {
-//   return num1 + num2;
-// }
 
 const registry = new Registry({
   getGrammarDefinition: async scopeName => {
@@ -21,6 +17,7 @@ const registry = new Registry({
     };
   },
 });
+
 async function liftOff(monaco, languageId) {
   // map of monaco "language id's" to TextMate scopeNames
   const [, scope] = languagesToRegister.find(([id]) => id === languageId);
@@ -54,17 +51,20 @@ const Editor = forwardRef(({ mode, theme }, ref) => {
     console.log("editor, monaco :", editor, monaco);
     ref.monacoRef.current = monaco;
     ref.monacoEditorRef.current = editor;
-
-    const w = editor._domElement.clientWidth;
-    // editor._domElement.style.width = `${w + 30}px`;
-
     editor.focus();
   };
   const editorWillMount = monaco => {
-    languagesToRegister.forEach(
-      ([languageId]) => void monaco.languages.register({ id: languageId })
-    );
+    const builtinLanguages = monaco.languages.getLanguages();
+    languagesToRegister.forEach(([languageId]) => {
+      const builtin = builtinLanguages.find(({ id }) => id === languageId);
+      if (builtin) {
+        builtin.loader = () => ({ then: () => {} });
+      } else {
+        monaco.languages.register({ id: languageId });
+      }
+    });
   };
+
   const onChange = (newValue, e) => {
     setValue(newValue);
   };
@@ -73,21 +73,23 @@ const Editor = forwardRef(({ mode, theme }, ref) => {
     if (monacoRef.current) {
       import(`./monaco-themes/${theme}`)
         .then(({ default: data }) => {
-          console.log("theme, data :", theme, data);
           setEditorPaddingColor(data.colors["editor.background"]);
           monacoRef.current.editor.defineTheme(theme, data);
         })
         .then(() => monacoRef.current.editor.setTheme(theme))
-        .catch(() => monacoRef.current.editor.setTheme(theme));
+        .catch(err => {
+          console.error(err);
+          monacoRef.current.editor.setTheme(theme);
+        });
     }
   }, [theme]);
 
   useEffect(() => {
     const monaco = monacoRef.current;
-    if (monaco) {
-      console.log("monaco, mode :", monaco, mode);
+    const editor = editorRef.current;
+    if (monaco && editor) {
       liftOff(monaco, mode).then(
-        () => void monaco.editor.setModelLanguage(editorRef.current.getModel(), mode)
+        () => void monaco.editor.setModelLanguage(editor.getModel(), mode)
       );
     }
   }, [mode]);
@@ -95,11 +97,16 @@ const Editor = forwardRef(({ mode, theme }, ref) => {
   useEffect(() => {
     const editor = editorRef.current;
     if (editor) {
-      const newNumLines = editor._modelData.viewModel.getLineCount();
-      const [{ clientHeight: lineHeight }] = editor._domElement.getElementsByClassName("view-line");
-      editor._domElement.style.height = `${lineHeight * newNumLines + 30}px`;
+      const model = editor.getModel();
+      model.onDidChangeContent(e => {
+        const newNumLines = editor._modelData.viewModel.getLineCount();
+        const [{ clientHeight: lineHeight }] = editor._domElement.getElementsByClassName(
+          "view-line"
+        );
+        editor._domElement.style.height = `${lineHeight * newNumLines + 30}px`;
+      });
     }
-  }, [value]);
+  }, []);
 
   const options = {
     selectOnLineNumbers: true,
@@ -123,11 +130,7 @@ const Editor = forwardRef(({ mode, theme }, ref) => {
 
   return (
     <div style={{ padding: 15, backgroundColor: editorPaddingColor }}>
-      <MonacoEditor
-        width="100%"
-        height="100%"
-        theme={theme}
-        language={mode}
+      <MonacoReactComponent
         value={value}
         options={options}
         onChange={onChange}

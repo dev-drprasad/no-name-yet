@@ -35,7 +35,7 @@ const tweet = text => {
 };
 
 function App() {
-  const [selectedCard, setSelecctedCard] = useState(3);
+  const [selectedCard, setSelecctedCard] = useState(0);
 
   const cardRef = React.useRef(null);
   const editorRef = React.useRef(null);

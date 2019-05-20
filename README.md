@@ -1,22 +1,38 @@
-## no-name-yet
+<p>
+    <h2 align="center">TweeKard - Make beautiful screenshots of code or content or both and share them</h2>
+</p>
 
-As for now, i have no f\*\*king idea on what to name the project
+## Introduction
 
-I am really lazy to write README.md. For now i will add following line:
+I always wanted to add some text with code that i share on twitter. Unfortunately, twitter doesn't allow writing essays. So, i decided to make this project. This project is inspired from cardon.now.sh and samanthaming's tidbits 🙏.
 
-    This project is inspired from cardon.now.sh and samantha ming's tidbits
+Start creating at https://tweekard.drprasad.in
 
-and of course, some screenshots
+## Features
 
-<img src="public/images/card1.png" width="600" />
-<img src="public/images/card2.png" width="600" />
-<img src="public/images/card3.png" width="600" />
+- **One click tweeter share**
+- **Multple templates**
+- **Customization**
 
-#### Todo
+## Available templates
+
+### Template 1
+
+<img src="public/images/card1.png" />
+
+### Template 2
+
+<img src="public/images/card2.png" />
+
+### Template 3
+
+<img src="public/images/card3.png" />
+
+## Todo
 
 - [ ] Reset colors functionality
 - [ ] Add placeholder text for content and code editors
-- [ ] Add way to increase padding of card (vertically and horizontally)
+- [x] Add way to increase padding of card (vertically and horizontally)
 - [ ] Funtionality to add/remove footer (may be header) for any template
 - [ ] Multiple font support (both content/editor)
 - [ ] Should we switch to monaco-editor ??????
@@ -24,7 +40,11 @@ and of course, some screenshots
 - [ ] What about facebook share ??
 - [ ] For f\*\*k sake, we need emoji support first
 
-#### References:
+## Authors
+
+- REDDY PRASAD ([@dev_drprasad](https://twitter.com/dev_drprasad))
+
+## References:
 
 - https://github.com/mrred85/one-themes/blob/master/theme-one_dark.js
 - https://github.com/ajaxorg/ace-builds/tree/master/src-noconflict
@@ -38,3 +58,5 @@ and of course, some screenshots
 - https://github.com/Microsoft/monaco-editor/issues/171
 - https://code.visualstudio.com/blogs/2017/02/08/syntax-highlighting-optimizations
 - https://github.com/microsoft/monaco-editor/issues/1070
+- https://code.visualstudio.com/api/language-extensions/syntax-highlight-guide
+- https://github.com/Microsoft/monaco-editor/issues/252
