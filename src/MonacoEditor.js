@@ -13,9 +13,14 @@ const registry = new Registry({
     console.log("scopeName :", scopeName);
     const [languageId] = languagesToRegister.find(([, scope]) => scope === scopeName);
     console.log("languageId :", languageId);
+
+    const url = scopeName.includes(".python")
+      ? `/grammers/python.tmLanguage`
+      : `/grammers/${languageId}.tmLanguage.json`;
+    const format = scopeName.includes(".python") ? "plist" : "json";
     return {
-      format: "json",
-      content: await (await fetch(`/grammers/${languageId}.tmLanguage.json`)).text(),
+      format,
+      content: await (await fetch(url)).text(),
     };
   },
 });
@@ -48,11 +53,14 @@ const Editor = forwardRef(({ mode, theme }, ref) => {
   const editorWillMount = monaco => {
     const builtinLanguages = monaco.languages.getLanguages();
     languagesToRegister.forEach(([languageId]) => {
-      const builtin = builtinLanguages.find(({ id }) => id === languageId);
-      if (builtin) {
-        builtin.loader = () => ({ then: () => {} });
-      } else {
-        monaco.languages.register({ id: languageId });
+      // no languageId means there dependencies
+      if (languageId) {
+        const builtin = builtinLanguages.find(({ id }) => id === languageId);
+        if (builtin) {
+          builtin.loader = () => ({ then: () => {} });
+        } else {
+          monaco.languages.register({ id: languageId });
+        }
       }
     });
   };
@@ -127,7 +135,7 @@ const Editor = forwardRef(({ mode, theme }, ref) => {
     folding: false,
     fontLigatures: true,
     contextmenu: false,
-    // fontFamily: "Fira Code",
+    fontFamily: "Fira Code",
     fontSize: 15,
   };
 

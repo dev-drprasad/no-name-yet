@@ -75,7 +75,8 @@ const getTheme = (theme, isBase) => {
     colors: newColors,
     rules,
     type: theme.type,
-    ...(!isBase && { base: getBase(theme.type), inherit: true }),
+    inherit: true,
+    base: getBase(theme.type),
   };
 };
 
