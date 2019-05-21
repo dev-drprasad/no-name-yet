@@ -1,8 +1,10 @@
 import React, { useEffect, forwardRef, useState } from "react";
 import MonacoReactComponent from "./MonacoReactComponent";
 import { Registry } from "monaco-textmate";
-import { wireTmGrammars } from "monaco-editor-textmate";
+// import { wireTmGrammars } from "monaco-editor-textmate";
 import languagesToRegister from "./monaco-languages";
+import tmthemeToMonaco from "./utils/tmtheme-to-monaco";
+import { wireTmGrammars } from "./utils/set-grammers";
 
 import "./MonacoEditor.css";
 
@@ -18,25 +20,15 @@ const registry = new Registry({
   },
 });
 
-async function liftOff(monaco, languageId) {
+async function liftOff(monaco, languageId, scopeMap) {
+  console.log("scopeMap :", scopeMap);
   // map of monaco "language id's" to TextMate scopeNames
   const [, scope] = languagesToRegister.find(([id]) => id === languageId);
 
   const grammers = new Map();
   grammers.set(languageId, scope);
 
-  // registry.loadGrammar("source.cpp").then(grammar => {
-  //   // at this point `grammar` is available...
-  //   var lineTokens = grammar.tokenizeLine('std::fstream out("file.txt", std::ios::out);');
-  //   for (var i = 0; i < lineTokens.tokens.length; i++) {
-  //     var token = lineTokens.tokens[i];
-  //     console.log(
-  //       "Token from " + token.startIndex + " to " + token.endIndex + " with scopes " + token.scopes
-  //     );
-  //   }
-  // });
-
-  await wireTmGrammars(monaco, registry, grammers);
+  await wireTmGrammars(monaco, registry, grammers, scopeMap);
 }
 
 const Editor = forwardRef(({ mode, theme }, ref) => {
@@ -70,35 +62,46 @@ const Editor = forwardRef(({ mode, theme }, ref) => {
   };
 
   useEffect(() => {
-    if (monacoRef.current) {
-      import(`./monaco-themes/${theme}`)
-        .then(({ default: data }) => {
-          setEditorPaddingColor(data.colors["editor.background"]);
-          monacoRef.current.editor.defineTheme(theme, data);
-        })
-        .then(() => monacoRef.current.editor.setTheme(theme))
-        .catch(err => {
-          console.error(err);
-          monacoRef.current.editor.setTheme(theme);
-        });
-    }
-  }, [theme]);
-
-  useEffect(() => {
     const monaco = monacoRef.current;
     const editor = editorRef.current;
     if (monaco && editor) {
-      liftOff(monaco, mode).then(
-        () => void monaco.editor.setModelLanguage(editor.getModel(), mode)
-      );
+      import(`./monaco-themes/${theme}-tmtheme`)
+        .then(({ default: data }) => {
+          const transformedTheme = tmthemeToMonaco(data);
+          setEditorPaddingColor(transformedTheme.colors["editor.background"]);
+          monaco.editor.defineTheme(theme, transformedTheme);
+          return transformedTheme.rules.reduce((acc, rule) => {
+            acc[rule.token] = true;
+            return acc;
+          }, {});
+        })
+        .then(themeScopes => liftOff(monaco, mode, themeScopes))
+        .then(() => void monaco.editor.setModelLanguage(editor.getModel(), mode))
+        .then(() => monaco.editor.setTheme(theme))
+        .catch(err => {
+          console.error(err);
+          monaco.editor.setTheme(theme);
+        });
     }
-  }, [mode]);
+  }, [theme, mode]);
+
+  // useEffect(() => {
+  //   const monaco = monacoRef.current;
+  //   const editor = editorRef.current;
+
+  //   if (monaco && editor) {
+  //     liftOff(monaco, mode, themeScopes.current).then(
+  //       () => void monaco.editor.setModelLanguage(editor.getModel(), mode)
+  //     );
+  //   }
+  // }, [mode]);
 
   useEffect(() => {
     const editor = editorRef.current;
     if (editor) {
       const model = editor.getModel();
       model.onDidChangeContent(e => {
+        console.log("editor._modelData :", editor._modelData);
         const newNumLines = editor._modelData.viewModel.getLineCount();
         const [{ clientHeight: lineHeight }] = editor._domElement.getElementsByClassName(
           "view-line"

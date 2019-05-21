@@ -597,5 +597,5 @@ export default {
   ],
   type: "dark",
   base: "vs-dark",
-  inherit: true,
+  inherit: false,
 };

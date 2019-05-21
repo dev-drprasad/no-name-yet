@@ -98,6 +98,7 @@ function App() {
         <ul className="CardList">
           {templates.map(id => (
             <li
+              key={id}
               className={selectedCard === id ? "Active" : ""}
               onClick={() => setSelecctedCard(id)}
             >
