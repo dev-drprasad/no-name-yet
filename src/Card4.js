@@ -7,69 +7,77 @@ import ContentEditor from "./ContentEditor";
 
 import "./Card4.css";
 
-const languages = [
-  { name: "C++", value: "cpp" },
-  { name: "C", value: "c" },
-  { name: "Clojure", value: "clojure" },
-  { name: "C#", value: "cs" },
-  { name: "CSS", value: "css" },
-  { name: "Dockerfile", value: "dockerfile" },
-  { name: "Golang", value: "go" },
-  { name: "Haskell", value: "haskell" },
-  { name: "HTML", value: "html" },
-  { name: "Java", value: "java" },
-  { name: "JavaScript", value: "js" },
-  { name: "React", value: "jsx" },
-  { name: "JSON", value: "json" },
-  { name: "Lua", value: "lua" },
-  { name: "Objective-C", value: "objc" },
-  { name: "Perl", value: "perl" },
-  { name: "PHP", value: "php" },
-  { name: "Python", value: "python" },
-  { name: "R", value: "r" },
-  { name: "Ruby", value: "ruby" },
-  { name: "Rust", value: "rust" },
-  { name: "SQL", value: "sql" },
-  { name: "Swift", value: "swift" },
-  { name: "XML", value: "xml" },
-  { name: "YAML", value: "yaml" },
-];
+const defaultText = `Binary Search Tree:
 
-const themes = [
-  { name: "SynthWave '84", value: "synthwave" },
-  { name: "One Dark", value: "one-dark" },
-];
+an element points to two elements, one on its left and one on its right. The element to the left is smaller, the element to the right is bigger. 
+
+Each of those elements can also point to two elements (or one, or none). In effect, each element has up to two sub-trees.`;
+
+const defaultCode = `data Tree a = EmptyTree | Node a (Tree a) (Tree a)          deriving (Show, Read, Eq)  
+
+singleton :: a -> Tree a  
+singleton x = Node x EmptyTree EmptyTree  
+  
+treeInsert :: (Ord a) => a -> Tree a -> Tree a  
+treeInsert x EmptyTree = singleton x  
+treeInsert x (Node a left right)   
+    | x == a = Node x left right  
+    | x < a  = Node a (treeInsert x left) right  
+    | x > a  = Node a left (treeInsert x right)
+
+treeElem :: (Ord a) => a -> Tree a -> Bool  
+treeElem x EmptyTree = False  
+treeElem x (Node a left right)  
+    | x == a = True  
+    | x < a  = treeElem x left  
+    | x > a  = treeElem x right`;
+
+const DEFAULT_SETTINGS = {
+  padding: { x: 50, y: 60 },
+  theme: "one-dark",
+  mode: "haskell",
+  cardBGColor: "#00a8f0",
+};
 
 const Card = forwardRef((_, ref) => {
-  const [padding, setPadding] = useState({ x: 40, y: 40 });
-  const [theme, setTheme] = useState(themes[0].value);
-  const [mode, setMode] = useState(languages[0].value);
+  const [options, setOptions] = useState(() => DEFAULT_SETTINGS);
 
   const monacoRef = React.useRef(null);
   const monacoEditorRef = React.useRef(null);
 
-  const handleThemeChange = theme => {
-    setTheme(theme);
-  };
-
-  const handleLanguageChange = language => {
-    setMode(language);
-  };
+  const { padding, cardBGColor } = options;
 
   return (
     <>
-      <Padding defaults={padding} onChange={padding => setPadding(padding)} />
+      <label>
+        Background:
+        <input
+          type="color"
+          value={cardBGColor}
+          onChange={e => setOptions({ ...options, cardBGColor: e.target.value })}
+        />
+      </label>
+      <Padding defaults={padding} onChange={padding => setOptions({ ...options, padding })} />
       <div
         className="Card4"
         ref={ref}
         style={{
-          backgroundColor: "#00a8f0",
+          backgroundColor: cardBGColor,
           padding: `${padding.y}px ${padding.x}px`,
         }}
       >
         <div className="CardInner">
-          <ContentEditor defaultBGColor="white" defaultTextColor="#586e75" />
-          <MonacoEditor theme={theme} mode={mode} ref={{ monacoRef, monacoEditorRef }} />
+          <ContentEditor
+            defaultBGColor="white"
+            defaultTextColor="#586e75"
+            defaultValue={defaultText}
+          />
+          <MonacoEditor
+            ref={{ monacoRef, monacoEditorRef }}
+            defaultValue={defaultCode}
+            defaultMode={DEFAULT_SETTINGS.mode}
+            defaultTheme={DEFAULT_SETTINGS.theme}
+          />
         </div>
       </div>
     </>

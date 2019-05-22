@@ -17,8 +17,8 @@ const plist = [
 ];
 
 const themes = [
-  { name: "SynthWave '84", value: "synthwave" },
   { name: "One Dark", value: "one-dark" },
+  { name: "SynthWave '84", value: "synthwave" },
   { name: "Dracula", value: "dracula" },
 ];
 
@@ -78,12 +78,11 @@ async function liftOff(monaco, languageId, scopeMap) {
   await wireTmGrammars(monaco, registry, grammers, scopeMap);
 }
 
-const Editor = forwardRef((_, ref) => {
+const Editor = forwardRef(({ defaultValue, defaultMode, defaultTheme }, ref) => {
   const [value, setValue] = useState("function add(num1, num2) { return num1 + num2 };");
   const [editorPaddingColor, setEditorPaddingColor] = useState("#ffffff00");
-  const [showSettings, setShowSettings] = useState(false);
-  const [theme, setTheme] = useState(themes[0].value);
-  const [mode, setMode] = useState(languages[0].value);
+  const [theme, setTheme] = useState(defaultTheme || themes[0].value);
+  const [mode, setMode] = useState(defaultMode || languages[0].value);
   const editorRef = React.useRef(null);
   const monacoRef = React.useRef(null);
 
@@ -157,17 +156,18 @@ const Editor = forwardRef((_, ref) => {
   //   }
   // }, [mode]);
 
+  const fitContent = editor => {
+    const newNumLines = editor._modelData.viewModel.getLineCount();
+    const [{ clientHeight: lineHeight }] = editor._domElement.getElementsByClassName("view-line");
+    editor._domElement.style.height = `${lineHeight * newNumLines}px`;
+  };
+
   useEffect(() => {
     const editor = editorRef.current;
     if (editor) {
-      const model = editor.getModel();
-      model.onDidChangeContent(e => {
-        console.log("editor._modelData :", editor._modelData);
-        const newNumLines = editor._modelData.viewModel.getLineCount();
-        const [{ clientHeight: lineHeight }] = editor._domElement.getElementsByClassName(
-          "view-line"
-        );
-        editor._domElement.style.height = `${lineHeight * newNumLines + 30}px`;
+      fitContent(editor); // if defaultValue has more code
+      editor.getModel().onDidChangeContent(e => {
+        fitContent(editor);
       });
     }
   }, []);
@@ -192,6 +192,7 @@ const Editor = forwardRef((_, ref) => {
     fontSize: 15,
     occurrencesHighlight: false,
     renderLineHighlight: "none",
+    value: defaultValue,
   };
 
   return (
@@ -204,14 +205,9 @@ const Editor = forwardRef((_, ref) => {
         editorDidMount={editorDidMount}
       />
 
-      <input
-        className="SettingsIcon"
-        type="button"
-        onClick={e => setShowSettings(true)}
-        value="&#x2699;"
-      />
+      <input className="SettingsIcon" type="button" value="&#x2699;" />
       <div className="EditorSettingsBar">
-        <select onChange={e => handleThemeChange(e.target.value)}>
+        <select onChange={e => handleThemeChange(e.target.value)} defaultValue={theme}>
           {themes.map(({ name, value }) => (
             <option key={value} value={value}>
               {name}
@@ -219,7 +215,7 @@ const Editor = forwardRef((_, ref) => {
           ))}
         </select>
         <span className="Seperator" />
-        <select onChange={e => handleLanguageChange(e.target.value)}>
+        <select onChange={e => handleLanguageChange(e.target.value)} defaultValue={mode}>
           {languages.map(({ name, value }) => (
             <option key={value} value={value}>
               {name}
@@ -234,8 +230,6 @@ const Editor = forwardRef((_, ref) => {
           max={24}
           onChange={e => handleFontSizeChange(e.target.value)}
         />
-        <span className="Seperator" />
-        <input type="button" onClick={e => setShowSettings(false)} value="&#x274c;" />
       </div>
     </div>
   );

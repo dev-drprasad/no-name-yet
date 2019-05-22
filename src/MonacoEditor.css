@@ -4,7 +4,7 @@
   .EditorSettingsBar {
     position: absolute;
     top: 5px;
-    right: -40px;
+    right: 0px;
     display: flex;
     justify-content: flex-end;
     align-items: center;
@@ -65,10 +65,17 @@
     right: -40px;
     width: 40px;
     height: 40px;
+    background-color: rgba(0, 0, 0, 0.75);
+    border-radius: 0 50% 50% 0;
+    box-shadow: 4px 5px 10px 3px rgba(0, 0, 0, 0.15);
+    outline: 0;
+    border: 0;
+    color: white;
+    font-size: 22px;
   }
 
   &:not(:hover) .SettingsIcon {
-    transition: all 1.5s ease-out;
+    transition: all 0.7s ease-out;
   }
 
   &:hover .SettingsIcon {
@@ -80,7 +87,7 @@
   }
 
   .SettingsIcon:not(:hover) + .EditorSettingsBar {
-    transition: all 1.5s ease-out;
+    transition: all 0.7s ease-out;
   }
   .react-monaco-editor-container {
     min-height: 300px;
