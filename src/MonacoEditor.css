@@ -2,10 +2,9 @@
   position: relative;
 
   .EditorSettingsBar {
-    visibility: hidden;
     position: absolute;
     top: 5px;
-    right: 5px;
+    right: -40px;
     display: flex;
     justify-content: flex-end;
     align-items: center;
@@ -14,6 +13,11 @@
     border-radius: 6px;
     box-shadow: 4px 5px 10px 3px rgba(0, 0, 0, 0.15);
     color: #a0a5b0;
+    z-index: 10;
+    visibility: hidden;
+    &:hover {
+      visibility: visible;
+    }
     .Seperator {
       height: 12px;
       margin: 0 6px;
@@ -54,8 +58,29 @@
     }
   }
 
-  &:hover .EditorSettingsBar {
+  .SettingsIcon {
+    visibility: hidden;
+    position: absolute;
+    top: 0;
+    right: -40px;
+    width: 40px;
+    height: 40px;
+  }
+
+  &:not(:hover) .SettingsIcon {
+    transition: all 1.5s ease-out;
+  }
+
+  &:hover .SettingsIcon {
     visibility: visible;
+  }
+
+  .SettingsIcon:hover + .EditorSettingsBar {
+    visibility: visible;
+  }
+
+  .SettingsIcon:not(:hover) + .EditorSettingsBar {
+    transition: all 1.5s ease-out;
   }
   .react-monaco-editor-container {
     min-height: 300px;

@@ -81,6 +81,7 @@ async function liftOff(monaco, languageId, scopeMap) {
 const Editor = forwardRef((_, ref) => {
   const [value, setValue] = useState("function add(num1, num2) { return num1 + num2 };");
   const [editorPaddingColor, setEditorPaddingColor] = useState("#ffffff00");
+  const [showSettings, setShowSettings] = useState(false);
   const [theme, setTheme] = useState(themes[0].value);
   const [mode, setMode] = useState(languages[0].value);
   const editorRef = React.useRef(null);
@@ -202,6 +203,13 @@ const Editor = forwardRef((_, ref) => {
         editorWillMount={editorWillMount}
         editorDidMount={editorDidMount}
       />
+
+      <input
+        className="SettingsIcon"
+        type="button"
+        onClick={e => setShowSettings(true)}
+        value="&#x2699;"
+      />
       <div className="EditorSettingsBar">
         <select onChange={e => handleThemeChange(e.target.value)}>
           {themes.map(({ name, value }) => (
@@ -226,6 +234,8 @@ const Editor = forwardRef((_, ref) => {
           max={24}
           onChange={e => handleFontSizeChange(e.target.value)}
         />
+        <span className="Seperator" />
+        <input type="button" onClick={e => setShowSettings(false)} value="&#x274c;" />
       </div>
     </div>
   );
