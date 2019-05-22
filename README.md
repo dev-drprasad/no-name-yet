@@ -39,6 +39,9 @@ Start creating at https://tweekard.drprasad.in
 - [ ] Add names for templates
 - [ ] What about facebook share ??
 - [ ] For f\*\*k sake, we need emoji support first
+- [ ] Prettier support
+- [ ] Change code editor/content font size
+- [ ] Monaco disable lineBackground, word highlight
 
 ## Authors
 

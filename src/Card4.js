@@ -15,6 +15,7 @@ const languages = [
   { name: "CSS", value: "css" },
   { name: "Dockerfile", value: "dockerfile" },
   { name: "Golang", value: "go" },
+  { name: "Haskell", value: "haskell" },
   { name: "HTML", value: "html" },
   { name: "Java", value: "java" },
   { name: "JavaScript", value: "js" },
@@ -58,26 +59,6 @@ const Card = forwardRef((_, ref) => {
   return (
     <>
       <Padding defaults={padding} onChange={padding => setPadding(padding)} />
-      <label>
-        Code theme:
-        <select onChange={e => handleThemeChange(e.target.value)}>
-          {themes.map(({ name, value }) => (
-            <option key={value} value={value}>
-              {name}
-            </option>
-          ))}
-        </select>
-      </label>
-      <label>
-        Language:
-        <select onChange={e => handleLanguageChange(e.target.value)}>
-          {languages.map(({ name, value }) => (
-            <option key={value} value={value}>
-              {name}
-            </option>
-          ))}
-        </select>
-      </label>
       <div
         className="Card4"
         ref={ref}

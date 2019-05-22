@@ -36,7 +36,7 @@ const getBase = type => {
   return "vs";
 };
 
-const getTheme = (theme, isBase) => {
+const getTheme = theme => {
   const { tokenColors = [], colors = {} } = theme;
   // (baseColors.tokenColors || []).forEach(color => tokenColors.unshift(color));
 

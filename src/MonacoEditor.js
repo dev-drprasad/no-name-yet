@@ -8,16 +8,59 @@ import { wireTmGrammars } from "./utils/set-grammers";
 
 import "./MonacoEditor.css";
 
+const plist = [
+  "source.python",
+  "source.regexp.python",
+  "source.haskell",
+  "source.java",
+  "text.html.javadoc",
+];
+
+const themes = [
+  { name: "SynthWave '84", value: "synthwave" },
+  { name: "One Dark", value: "one-dark" },
+  { name: "Dracula", value: "dracula" },
+];
+
+const languages = [
+  { name: "C++", value: "cpp" },
+  { name: "C", value: "c" },
+  { name: "Clojure", value: "clojure" },
+  { name: "C#", value: "cs" },
+  { name: "CSS", value: "css" },
+  { name: "Dockerfile", value: "dockerfile" },
+  { name: "Golang", value: "go" },
+  { name: "Haskell", value: "haskell" },
+  { name: "HTML", value: "html" },
+  { name: "Java", value: "java" },
+  { name: "JavaScript", value: "js" },
+  { name: "React", value: "jsx" },
+  { name: "JSON", value: "json" },
+  { name: "Lua", value: "lua" },
+  { name: "Objective-C", value: "objc" },
+  { name: "Perl", value: "perl" },
+  { name: "PHP", value: "php" },
+  { name: "Python", value: "python" },
+  { name: "R", value: "r" },
+  { name: "Ruby", value: "ruby" },
+  { name: "Rust", value: "rust" },
+  { name: "SQL", value: "sql" },
+  { name: "Swift", value: "swift" },
+  { name: "XML", value: "xml" },
+  { name: "YAML", value: "yaml" },
+];
+
 const registry = new Registry({
   getGrammarDefinition: async scopeName => {
     console.log("scopeName :", scopeName);
     const [languageId] = languagesToRegister.find(([, scope]) => scope === scopeName);
     console.log("languageId :", languageId);
 
-    const url = scopeName.includes(".python")
-      ? `/grammers/python.tmLanguage`
-      : `/grammers/${languageId}.tmLanguage.json`;
-    const format = scopeName.includes(".python") ? "plist" : "json";
+    const format = plist.includes(scopeName) ? "plist" : "json";
+    const url =
+      format === "plist"
+        ? `/grammers/${languageId}.tmLanguage`
+        : `/grammers/${languageId}.tmLanguage.json`;
     return {
       format,
       content: await (await fetch(url)).text(),
@@ -26,7 +69,6 @@ const registry = new Registry({
 });
 
 async function liftOff(monaco, languageId, scopeMap) {
-  console.log("scopeMap :", scopeMap);
   // map of monaco "language id's" to TextMate scopeNames
   const [, scope] = languagesToRegister.find(([id]) => id === languageId);
 
@@ -36,9 +78,11 @@ async function liftOff(monaco, languageId, scopeMap) {
   await wireTmGrammars(monaco, registry, grammers, scopeMap);
 }
 
-const Editor = forwardRef(({ mode, theme }, ref) => {
+const Editor = forwardRef((_, ref) => {
   const [value, setValue] = useState("function add(num1, num2) { return num1 + num2 };");
   const [editorPaddingColor, setEditorPaddingColor] = useState("#ffffff00");
+  const [theme, setTheme] = useState(themes[0].value);
+  const [mode, setMode] = useState(languages[0].value);
   const editorRef = React.useRef(null);
   const monacoRef = React.useRef(null);
 
@@ -67,6 +111,14 @@ const Editor = forwardRef(({ mode, theme }, ref) => {
 
   const onChange = (newValue, e) => {
     setValue(newValue);
+  };
+
+  const handleThemeChange = setTheme;
+  const handleLanguageChange = setMode;
+
+  const handleFontSizeChange = fontSize => {
+    const editor = editorRef.current;
+    editor.updateOptions({ fontSize: Number(fontSize) });
   };
 
   useEffect(() => {
@@ -137,10 +189,12 @@ const Editor = forwardRef(({ mode, theme }, ref) => {
     contextmenu: false,
     fontFamily: "Fira Code",
     fontSize: 15,
+    occurrencesHighlight: false,
+    renderLineHighlight: "none",
   };
 
   return (
-    <div style={{ padding: 15, backgroundColor: editorPaddingColor }}>
+    <div className="MonacoEditor" style={{ padding: 15, backgroundColor: editorPaddingColor }}>
       <MonacoReactComponent
         value={value}
         options={options}
@@ -148,6 +202,31 @@ const Editor = forwardRef(({ mode, theme }, ref) => {
         editorWillMount={editorWillMount}
         editorDidMount={editorDidMount}
       />
+      <div className="EditorSettingsBar">
+        <select onChange={e => handleThemeChange(e.target.value)}>
+          {themes.map(({ name, value }) => (
+            <option key={value} value={value}>
+              {name}
+            </option>
+          ))}
+        </select>
+        <span className="Seperator" />
+        <select onChange={e => handleLanguageChange(e.target.value)}>
+          {languages.map(({ name, value }) => (
+            <option key={value} value={value}>
+              {name}
+            </option>
+          ))}
+        </select>
+        <span className="Seperator" />
+        <input
+          type="number"
+          defaultValue={15}
+          min={12}
+          max={24}
+          onChange={e => handleFontSizeChange(e.target.value)}
+        />
+      </div>
     </div>
   );
 });
