@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 
 import domtoimage from "dom-to-image";
 
+import Card1 from "./Card1";
 import Card2 from "./Card2";
 import Card3 from "./Card3";
-import Card4 from "./Card4";
 
 // import "brace/mode/javascript"; // mandatory. else can't input in editor
 
@@ -111,8 +111,8 @@ function App() {
       </div>
       <main>
         <div className="CardWrapper-CropBug">
-          {selectedCard === 0 && <Card2 ref={{ cardRef, editorRef }} />}
-          {selectedCard === 1 && <Card4 ref={{ cardRef, editorRef }} />}
+          {selectedCard === 0 && <Card1 ref={{ cardRef, editorRef }} />}
+          {selectedCard === 1 && <Card2 ref={{ cardRef, editorRef }} />}
           {selectedCard === 2 && <Card3 ref={{ cardRef }} />}
         </div>
         <div>

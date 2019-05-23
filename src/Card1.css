@@ -1,4 +1,37 @@
-.Card {
+/* CardInner require to prevent box-shadow at middle */
+.App .Card-1 .CardInner {
+  width: 800px;
+  text-align: initial;
+  box-shadow: 8px 8px 20px 10px rgba(100, 100, 100, 0.15);
+}
+
+.App .Options {
+  margin-bottom: 15px;
+}
+
+.App .Card-1 {
   background-color: rgb(74, 144, 226);
-  padding: 40px;
+  padding: 20px 40px 80px 40px;
+  position: relative;
+}
+
+.App .Card-1 .CardHeading {
+  color: white;
+  font-family: inherit;
+  margin-bottom: 15px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
+.App .Card-1 .CardFooter {
+  color: #f0f0f0;
+  font-family: inherit;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 55px;
+  width: 100%;
+  font-weight: 600;
 }

@@ -1,39 +1,52 @@
 import React, { forwardRef, useState } from "react";
 
-// import "brace/mode/golang";
-
-import ContentEditor from "./ContentEditor";
-import MonacoEditor from "./MonacoEditor";
-import "./Card2.css";
-
 import Padding from "./Padding";
 
+import MonacoEditor from "./MonacoEditor";
+import ContentEditor from "./ContentEditor";
+
+import "./Card2.css";
+
+const defaultText = `Binary Search Tree:
+
+an element points to two elements, one on its left and one on its right. The element to the left is smaller, the element to the right is bigger. 
+
+Each of those elements can also point to two elements (or one, or none). In effect, each element has up to two sub-trees.`;
+
+const defaultCode = `data Tree a = EmptyTree | Node a (Tree a) (Tree a) deriving (Show, Read, Eq)  
+
+singleton :: a -> Tree a  
+singleton x = Node x EmptyTree EmptyTree  
+  
+treeInsert :: (Ord a) => a -> Tree a -> Tree a  
+treeInsert x EmptyTree = singleton x  
+treeInsert x (Node a left right)   
+    | x == a = Node x left right  
+    | x < a  = Node a (treeInsert x left) right  
+    | x > a  = Node a left (treeInsert x right)
+
+treeElem :: (Ord a) => a -> Tree a -> Bool  
+treeElem x EmptyTree = False  
+treeElem x (Node a left right)  
+    | x == a = True  
+    | x < a  = treeElem x left  
+    | x > a  = treeElem x right`;
+
 const DEFAULT_SETTINGS = {
-  padding: { x: 60, y: 25 },
+  padding: { x: 50, y: 60 },
   theme: "one-dark",
-  mode: "js",
-  cardBGColor: "#39c98e",
+  mode: "haskell",
+  cardBGColor: "#00a8f0",
 };
 
-const defaultCode = `const pluckDeep = key => obj => key.split('.').reduce((acc, key) => acc[key], obj);
-
-const compose = (...fns) =>
-  res => fns.reduce((accum, next) => next(accum), res);
-
-const unfold = (f, seed) => {
-  const go = (f, seed, acc) => {
-    const res = f(seed);
-    return res ? go(f, res[1], acc.concat([res[0]])) : acc;
-  }
-  return go(f, seed, []);
-}`;
-const defaultHeading = `Useful helper functions for JavaScript`;
-const defaultFooter = `                      @dev_drprasad                      `;
-
 const Card = forwardRef((_, ref) => {
-  const [options, setOptions] = useState(DEFAULT_SETTINGS);
+  const [options, setOptions] = useState(() => DEFAULT_SETTINGS);
+
+  const monacoRef = React.useRef(null);
+  const monacoEditorRef = React.useRef(null);
 
   const { padding, cardBGColor } = options;
+
   return (
     <>
       <label>
@@ -45,28 +58,27 @@ const Card = forwardRef((_, ref) => {
         />
       </label>
       <Padding defaults={padding} onChange={padding => setOptions({ ...options, padding })} />
-
       <div
-        className="Card2"
+        className="Card-2"
         ref={ref.cardRef}
         style={{
           backgroundColor: cardBGColor,
-          padding: `${padding.y}px ${padding.x}px ${padding.y + 60}px ${padding.x}px`, // footer.height = 55
+          padding: `${padding.y}px ${padding.x}px`,
         }}
       >
-        <ContentEditor className="CardHeading" defaultFontSize={30} defaultValue={defaultHeading} />
-        <div className="Card2Inner">
+        <div className="CardInner">
+          <ContentEditor
+            defaultBGColor="white"
+            defaultTextColor="#586e75"
+            defaultValue={defaultText}
+          />
           <MonacoEditor
+            ref={{ monacoRef, monacoEditorRef }}
             defaultValue={defaultCode}
             defaultMode={DEFAULT_SETTINGS.mode}
             defaultTheme={DEFAULT_SETTINGS.theme}
           />
         </div>
-        <ContentEditor
-          className="CardFooter"
-          defaultValue={defaultFooter}
-          defaultBGColor="#5a83da"
-        />
       </div>
     </>
   );
