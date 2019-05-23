@@ -2,11 +2,17 @@ import React, { useState } from "react";
 
 import "./ContentEditor.css";
 
-const ContentEditor = ({ className, defaultValue = "", defaultTextColor, defaultBGColor }) => {
+const ContentEditor = ({
+  className,
+  defaultValue = "",
+  defaultTextColor,
+  defaultBGColor,
+  defaultFontSize,
+}) => {
   const [settings, setSettings] = useState(() => ({
     textColor: defaultTextColor || "white",
     backgroundColor: defaultBGColor || "#ffffff00",
-    fontSize: 16,
+    fontSize: defaultFontSize || 16,
   }));
 
   const handleTextColorChange = e => {
@@ -63,7 +69,7 @@ const ContentEditor = ({ className, defaultValue = "", defaultTextColor, default
           type="number"
           defaultValue={settings.fontSize}
           min={12}
-          max={24}
+          max={30}
           onChange={e => handleFontSizeChange(e.target.value)}
         />
       </div>

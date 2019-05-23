@@ -36,12 +36,14 @@ const Card = forwardRef((_, ref) => {
             defaultTextColor="#586E75"
             defaultBGColor="#FDF6E3"
             defaultValue={defaultHeading}
+            defaultFontSize={30}
           />
           <ContentEditor
             className="TextArea"
             defaultTextColor="#586E75"
             defaultBGColor="#FDF6E3"
             defaultValue={defaultTextArea}
+            defaultFontSize={20}
           />
         </div>
       </div>

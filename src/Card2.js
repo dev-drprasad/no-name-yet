@@ -32,7 +32,7 @@ const Card = forwardRef((_, ref) => {
           padding: `${padding.y}px ${padding.x}px`,
         }}
       >
-        <ContentEditor className="CardHeading" />
+        <ContentEditor className="CardHeading" defaultFontSize={20} />
         <div className="Card2Inner">
           <CodeEditor ref={ref.editorRef} theme={theme} mode={mode} />
         </div>
