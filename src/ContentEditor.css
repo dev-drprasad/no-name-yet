@@ -6,6 +6,39 @@
     outline: 0;
     white-space: pre-wrap;
   }
+
+  .SettingsIcon {
+    visibility: hidden;
+    position: absolute;
+    top: 0;
+    right: -40px;
+    width: 40px;
+    height: 40px;
+    background-color: rgba(0, 0, 0, 0.75);
+    border-radius: 0 50% 50% 0;
+    box-shadow: 4px 5px 10px 3px rgba(0, 0, 0, 0.15);
+    outline: 0;
+    border: 0;
+    color: white;
+    font-size: 22px;
+    z-index: 10;
+  }
+
+  &:not(:hover) .SettingsIcon {
+    transition: all 0.2s ease-out;
+  }
+
+  &:hover .SettingsIcon {
+    visibility: visible;
+  }
+
+  .SettingsIcon:hover + .TextFormatBar {
+    visibility: visible;
+  }
+
+  .SettingsIcon:not(:hover) + .TextFormatBar {
+    transition: all 0.5s ease-out;
+  }
   .TextFormatBar {
     visibility: hidden;
     position: absolute;
@@ -19,6 +52,9 @@
     border-radius: 6px;
     box-shadow: 4px 5px 10px 3px rgba(0, 0, 0, 0.15);
     color: #a0a5b0;
+    &:hover {
+      visibility: visible;
+    }
     .Seperator {
       height: 12px;
       margin: 0 6px;
@@ -57,10 +93,15 @@
         font-weight: 700;
       }
     }
-  }
-
-  &:hover .TextFormatBar {
-    visibility: visible;
+    .FontSizeSelect {
+      background: none;
+      border: 1px solid gray;
+      outline: none;
+      color: white;
+      border-radius: 4px;
+      text-align: center;
+      font-size: 12px;
+    }
   }
 }
 

@@ -83,6 +83,7 @@ const Editor = forwardRef(({ defaultValue, defaultMode, defaultTheme }, ref) => 
   const [editorPaddingColor, setEditorPaddingColor] = useState("#ffffff00");
   const [theme, setTheme] = useState(defaultTheme || themes[0].value);
   const [mode, setMode] = useState(defaultMode || languages[0].value);
+  const [fontSize, setFontSize] = useState(15);
   const editorRef = React.useRef(null);
   const monacoRef = React.useRef(null);
 
@@ -116,10 +117,7 @@ const Editor = forwardRef(({ defaultValue, defaultMode, defaultTheme }, ref) => 
   const handleThemeChange = setTheme;
   const handleLanguageChange = setMode;
 
-  const handleFontSizeChange = fontSize => {
-    const editor = editorRef.current;
-    editor.updateOptions({ fontSize: Number(fontSize) });
-  };
+  const handleFontSizeChange = fontSize => setFontSize(Number(fontSize));
 
   useEffect(() => {
     const monaco = monacoRef.current;
@@ -159,18 +157,36 @@ const Editor = forwardRef(({ defaultValue, defaultMode, defaultTheme }, ref) => 
   const fitContent = editor => {
     const newNumLines = editor._modelData.viewModel.getLineCount();
     const [{ clientHeight: lineHeight }] = editor._domElement.getElementsByClassName("view-line");
+    console.log("lineHeight :", lineHeight);
     editor._domElement.style.height = `${lineHeight * newNumLines}px`;
   };
 
   useEffect(() => {
     const editor = editorRef.current;
+    console.log("useEffect");
     if (editor) {
       fitContent(editor); // if defaultValue has more code
-      editor.getModel().onDidChangeContent(e => {
+
+      const model = editor.getModel();
+      console.log("model :", model);
+      model.onDidChangeContent(e => {
+        console.log("onDidChangeContent");
         fitContent(editor);
+      });
+      editor.onDidChangeConfiguration(e => {
+        console.log("onDidChangeConfiguration");
+        // UI has not updated even after event
+        setTimeout(() => fitContent(editor), 50);
       });
     }
   }, []);
+
+  useEffect(() => {
+    const editor = editorRef.current;
+    if (editor) {
+      editor.updateOptions({ fontSize: Number(fontSize) });
+    }
+  }, [fontSize]);
 
   const options = {
     selectOnLineNumbers: true,
@@ -195,6 +211,8 @@ const Editor = forwardRef(({ defaultValue, defaultMode, defaultTheme }, ref) => 
     value: defaultValue,
   };
 
+  console.log("fontSize :", fontSize);
+
   return (
     <div className="MonacoEditor" style={{ padding: 15, backgroundColor: editorPaddingColor }}>
       <MonacoReactComponent
@@ -207,7 +225,11 @@ const Editor = forwardRef(({ defaultValue, defaultMode, defaultTheme }, ref) => 
 
       <input className="SettingsIcon" type="button" value="&#x2699;" />
       <div className="EditorSettingsBar">
-        <select onChange={e => handleThemeChange(e.target.value)} defaultValue={theme}>
+        <select
+          className="Select"
+          onChange={e => handleThemeChange(e.target.value)}
+          defaultValue={theme}
+        >
           {themes.map(({ name, value }) => (
             <option key={value} value={value}>
               {name}
@@ -215,7 +237,11 @@ const Editor = forwardRef(({ defaultValue, defaultMode, defaultTheme }, ref) => 
           ))}
         </select>
         <span className="Seperator" />
-        <select onChange={e => handleLanguageChange(e.target.value)} defaultValue={mode}>
+        <select
+          className="Select"
+          onChange={e => handleLanguageChange(e.target.value)}
+          defaultValue={mode}
+        >
           {languages.map(({ name, value }) => (
             <option key={value} value={value}>
               {name}
@@ -224,6 +250,7 @@ const Editor = forwardRef(({ defaultValue, defaultMode, defaultTheme }, ref) => 
         </select>
         <span className="Seperator" />
         <input
+          className="FontSizeSelect"
           type="number"
           defaultValue={15}
           min={12}

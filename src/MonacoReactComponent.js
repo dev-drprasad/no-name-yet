@@ -91,4 +91,4 @@ MonacoEditor.defaultProps = {
   onChange: noop,
 };
 
-export default MonacoEditor;
+export default React.memo(MonacoEditor, () => true);

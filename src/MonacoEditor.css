@@ -56,6 +56,25 @@
         font-weight: 700;
       }
     }
+    .FontSizeSelect {
+      background: none;
+      border: 1px solid gray;
+      outline: none;
+      color: white;
+      border-radius: 4px;
+      text-align: center;
+      font-size: 12px;
+    }
+
+    .Select {
+      background: none;
+      border-radius: 4px;
+      color: white;
+      border: 1px solid gray;
+      option {
+        color: black;
+      }
+    }
   }
 
   .SettingsIcon {
@@ -75,7 +94,7 @@
   }
 
   &:not(:hover) .SettingsIcon {
-    transition: all 0.7s ease-out;
+    transition: all 0.2s ease-out;
   }
 
   &:hover .SettingsIcon {
@@ -87,7 +106,7 @@
   }
 
   .SettingsIcon:not(:hover) + .EditorSettingsBar {
-    transition: all 0.7s ease-out;
+    transition: all 0.6s ease-out;
   }
   .react-monaco-editor-container {
     min-height: 300px;

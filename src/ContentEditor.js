@@ -6,6 +6,7 @@ const ContentEditor = ({ className, defaultValue = "", defaultTextColor, default
   const [settings, setSettings] = useState(() => ({
     textColor: defaultTextColor || "white",
     backgroundColor: defaultBGColor || "#ffffff00",
+    fontSize: 16,
   }));
 
   const handleTextColorChange = e => {
@@ -14,10 +15,13 @@ const ContentEditor = ({ className, defaultValue = "", defaultTextColor, default
   const handleBackgroundColorChange = e => {
     setSettings({ ...settings, backgroundColor: e.target.value });
   };
+  const handleFontSizeChange = fontSize => {
+    setSettings({ ...settings, fontSize: Number(fontSize) });
+  };
   return (
     <div
       className={`ContentEditor ${className}`}
-      style={{ backgroundColor: settings.backgroundColor }}
+      style={{ backgroundColor: settings.backgroundColor, fontSize: settings.fontSize }}
     >
       <div
         style={{ color: settings.textColor }}
@@ -25,6 +29,7 @@ const ContentEditor = ({ className, defaultValue = "", defaultTextColor, default
         contentEditable
         dangerouslySetInnerHTML={{ __html: defaultValue }}
       />
+      <input className="SettingsIcon" type="button" value="&#x2699;" />
       <div className="TextFormatBar">
         <span
           role="button"
@@ -52,6 +57,15 @@ const ContentEditor = ({ className, defaultValue = "", defaultTextColor, default
             title="background color"
           />
         </span>
+        <span className="Seperator" />
+        <input
+          className="FontSizeSelect"
+          type="number"
+          defaultValue={settings.fontSize}
+          min={12}
+          max={24}
+          onChange={e => handleFontSizeChange(e.target.value)}
+        />
       </div>
     </div>
   );
