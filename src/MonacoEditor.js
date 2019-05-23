@@ -20,6 +20,7 @@ const themes = [
   { name: "One Dark", value: "one-dark" },
   { name: "SynthWave '84", value: "synthwave" },
   { name: "Dracula", value: "dracula" },
+  { name: "Tomorrow Light", value: "tomorrow" },
 ];
 
 const languages = [
