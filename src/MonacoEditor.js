@@ -91,9 +91,8 @@ const Editor = forwardRef(({ defaultValue, defaultMode, defaultTheme }, ref) => 
     editorRef.current = editor;
     monacoRef.current = monaco;
     console.log("editor, monaco :", editor, monaco);
-    ref.monacoRef.current = monaco;
-    ref.monacoEditorRef.current = editor;
     editor.focus();
+    fitContent(editor);
   };
   const editorWillMount = monaco => {
     const builtinLanguages = monaco.languages.getLanguages();
@@ -108,10 +107,6 @@ const Editor = forwardRef(({ defaultValue, defaultMode, defaultTheme }, ref) => 
         }
       }
     });
-  };
-
-  const onChange = (newValue, e) => {
-    setValue(newValue);
   };
 
   const handleThemeChange = setTheme;
@@ -143,40 +138,25 @@ const Editor = forwardRef(({ defaultValue, defaultMode, defaultTheme }, ref) => 
     }
   }, [theme, mode]);
 
-  // useEffect(() => {
-  //   const monaco = monacoRef.current;
-  //   const editor = editorRef.current;
-
-  //   if (monaco && editor) {
-  //     liftOff(monaco, mode, themeScopes.current).then(
-  //       () => void monaco.editor.setModelLanguage(editor.getModel(), mode)
-  //     );
-  //   }
-  // }, [mode]);
-
   const fitContent = editor => {
-    const newNumLines = editor._modelData.viewModel.getLineCount();
-    const [{ clientHeight: lineHeight }] = editor._domElement.getElementsByClassName("view-line");
-    console.log("lineHeight :", lineHeight);
-    editor._domElement.style.height = `${lineHeight * newNumLines}px`;
+    setTimeout(() => {
+      const newNumLines = editor._modelData.viewModel.getLineCount();
+      const [{ clientHeight: lineHeight }] = editor._domElement.getElementsByClassName("view-line");
+
+      editor._domElement.style.height = `${lineHeight * newNumLines + 15}px`;
+    }, 50); // UI has not updated even after event
   };
 
   useEffect(() => {
     const editor = editorRef.current;
-    console.log("useEffect");
     if (editor) {
-      fitContent(editor); // if defaultValue has more code
-
       const model = editor.getModel();
-      console.log("model :", model);
+
       model.onDidChangeContent(e => {
-        console.log("onDidChangeContent");
         fitContent(editor);
       });
       editor.onDidChangeConfiguration(e => {
-        console.log("onDidChangeConfiguration");
-        // UI has not updated even after event
-        setTimeout(() => fitContent(editor), 50);
+        fitContent(editor);
       });
     }
   }, []);
@@ -205,20 +185,18 @@ const Editor = forwardRef(({ defaultValue, defaultMode, defaultTheme }, ref) => 
     fontLigatures: true,
     contextmenu: false,
     fontFamily: "Fira Code",
-    fontSize: 15,
+    fontSize: fontSize,
     occurrencesHighlight: false,
     renderLineHighlight: "none",
     value: defaultValue,
   };
-
-  console.log("fontSize :", fontSize);
 
   return (
     <div className="MonacoEditor" style={{ padding: 15, backgroundColor: editorPaddingColor }}>
       <MonacoReactComponent
         value={value}
         options={options}
-        onChange={onChange}
+        onChange={setValue}
         editorWillMount={editorWillMount}
         editorDidMount={editorDidMount}
       />
@@ -252,7 +230,7 @@ const Editor = forwardRef(({ defaultValue, defaultMode, defaultTheme }, ref) => 
         <input
           className="FontSizeSelect"
           type="number"
-          defaultValue={15}
+          defaultValue={fontSize}
           min={12}
           max={24}
           onChange={e => handleFontSizeChange(e.target.value)}

@@ -1,7 +1,7 @@
 import React from "react";
 import "monaco-editor";
 
-function noop() {}
+const noop = () => {};
 
 class MonacoEditor extends React.PureComponent {
   constructor(props) {

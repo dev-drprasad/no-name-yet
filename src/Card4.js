@@ -13,7 +13,7 @@ an element points to two elements, one on its left and one on its right. The ele
 
 Each of those elements can also point to two elements (or one, or none). In effect, each element has up to two sub-trees.`;
 
-const defaultCode = `data Tree a = EmptyTree | Node a (Tree a) (Tree a)          deriving (Show, Read, Eq)  
+const defaultCode = `data Tree a = EmptyTree | Node a (Tree a) (Tree a) deriving (Show, Read, Eq)  
 
 singleton :: a -> Tree a  
 singleton x = Node x EmptyTree EmptyTree  
@@ -60,7 +60,7 @@ const Card = forwardRef((_, ref) => {
       <Padding defaults={padding} onChange={padding => setOptions({ ...options, padding })} />
       <div
         className="Card4"
-        ref={ref}
+        ref={ref.cardRef}
         style={{
           backgroundColor: cardBGColor,
           padding: `${padding.y}px ${padding.x}px`,

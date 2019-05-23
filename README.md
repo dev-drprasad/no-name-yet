@@ -41,7 +41,8 @@ Start creating at https://tweekard.drprasad.in
 - [ ] For f\*\*k sake, we need emoji support first
 - [ ] Prettier support
 - [ ] Change code editor/content font size
-- [ ] Monaco disable lineBackground, word highlight
+- [x] Monaco disable lineBackground, word highlight
+- [ ] Wordwrap MonacoEditor after certain width reached
 
 ## Authors
 
