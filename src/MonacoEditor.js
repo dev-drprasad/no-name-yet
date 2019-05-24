@@ -79,7 +79,7 @@ async function liftOff(monaco, languageId, scopeMap) {
   await wireTmGrammars(monaco, registry, grammers, scopeMap);
 }
 
-const Editor = forwardRef(({ defaultValue, defaultMode, defaultTheme }, ref) => {
+const Editor = forwardRef(({ defaultValue, defaultMode, defaultTheme, minHeight }, ref) => {
   const [value, setValue] = useState("function add(num1, num2) { return num1 + num2 };");
   const [editorPaddingColor, setEditorPaddingColor] = useState("#ffffff00");
   const [theme, setTheme] = useState(defaultTheme || themes[0].value);
@@ -200,6 +200,7 @@ const Editor = forwardRef(({ defaultValue, defaultMode, defaultTheme }, ref) => 
         onChange={setValue}
         editorWillMount={editorWillMount}
         editorDidMount={editorDidMount}
+        minHeight={minHeight}
       />
 
       <input className="SettingsIcon" type="button" value="&#x2699;" />

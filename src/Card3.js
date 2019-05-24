@@ -10,8 +10,6 @@ const defaultTextArea = `I think the lack of reusability comes in object oriente
                                                                                                    -- Joe Armstrong`;
 const DEFAULT_SETTINGS = {
   padding: { x: 50, y: 60 },
-  theme: "one-dark",
-  mode: "js",
   cardBGColor: "#00a8f0",
 };
 

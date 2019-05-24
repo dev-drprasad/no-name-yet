@@ -5,8 +5,7 @@ import Padding from "./Padding";
 import MonacoEditor from "./MonacoEditor";
 import ContentEditor from "./ContentEditor";
 
-import "./Card2.css";
-import Options from "./Options";
+import "./Card4.css";
 
 const defaultText = `Binary Search Tree:
 
@@ -35,6 +34,8 @@ treeElem x (Node a left right)
 
 const DEFAULT_SETTINGS = {
   padding: { x: 50, y: 60 },
+  theme: "one-dark",
+  mode: "haskell",
   cardBGColor: "#00a8f0",
 };
 
@@ -48,27 +49,40 @@ const Card = forwardRef((_, ref) => {
 
   return (
     <>
-      <Options defaults={options} onChange={options => setOptions(options)} />
-      <div
-        className="Card-2"
-        ref={ref.cardRef}
-        style={{
-          backgroundColor: cardBGColor,
-          padding: `${padding.y}px ${padding.x}px`,
-        }}
-      >
-        <div className="CardInner">
-          <ContentEditor
-            defaultBGColor="white"
-            defaultTextColor="#586e75"
-            defaultValue={defaultText}
+      <div>
+        <label>
+          Background:
+          <input
+            type="color"
+            value={cardBGColor}
+            onChange={e => setOptions({ ...options, cardBGColor: e.target.value })}
           />
-          <MonacoEditor
-            ref={{ monacoRef, monacoEditorRef }}
-            defaultValue={defaultCode}
-            defaultMode="haskell"
-            defaultTheme="one-dark"
-          />
+        </label>
+        <Padding defaults={padding} onChange={padding => setOptions({ ...options, padding })} />
+      </div>
+      <div class="CardWrapper-CropBug">
+        <div
+          className="Card-4"
+          ref={ref.cardRef}
+          style={{
+            backgroundColor: cardBGColor,
+            padding: `${padding.y}px ${padding.x}px`,
+          }}
+        >
+          <div className="CardInner">
+            <MonacoEditor
+              ref={{ monacoRef, monacoEditorRef }}
+              defaultValue={defaultCode}
+              defaultMode={DEFAULT_SETTINGS.mode}
+              defaultTheme={DEFAULT_SETTINGS.theme}
+              minHeight={100}
+            />
+            <ContentEditor
+              defaultBGColor="white"
+              defaultTextColor="#586e75"
+              defaultValue={defaultText}
+            />
+          </div>
         </div>
       </div>
     </>

@@ -7,11 +7,10 @@ import MonacoEditor from "./MonacoEditor";
 import "./Card1.css";
 
 import Padding from "./Padding";
+import Options from "./Options";
 
 const DEFAULT_SETTINGS = {
   padding: { x: 60, y: 25 },
-  theme: "one-dark",
-  mode: "js",
   cardBGColor: "#39c98e",
 };
 
@@ -36,15 +35,7 @@ const Card = forwardRef((_, ref) => {
   const { padding, cardBGColor } = options;
   return (
     <>
-      <label>
-        Background:
-        <input
-          type="color"
-          value={cardBGColor}
-          onChange={e => setOptions({ ...options, cardBGColor: e.target.value })}
-        />
-      </label>
-      <Padding defaults={padding} onChange={padding => setOptions({ ...options, padding })} />
+      <Options defaults={options} onChange={options => setOptions(options)} />
 
       <div
         className="Card-1"
@@ -56,11 +47,7 @@ const Card = forwardRef((_, ref) => {
       >
         <ContentEditor className="CardHeading" defaultFontSize={30} defaultValue={defaultHeading} />
         <div className="CardInner">
-          <MonacoEditor
-            defaultValue={defaultCode}
-            defaultMode={DEFAULT_SETTINGS.mode}
-            defaultTheme={DEFAULT_SETTINGS.theme}
-          />
+          <MonacoEditor defaultValue={defaultCode} defaultMode="js" defaultTheme="one-dark" />
         </div>
         <ContentEditor
           className="CardFooter"

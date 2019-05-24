@@ -36,26 +36,30 @@ const Options = ({ defaults, onChange }) => {
         Background:
         <input type="color" value={cardBGColor} onChange={e => setCardBGColor(e.target.value)} />
       </label>
-      <label>
-        Code theme:
-        <select onChange={e => handleThemeChange(e.target.value)} value={theme}>
-          {themes.map(({ name, value }) => (
-            <option key={value} value={value}>
-              {name}
-            </option>
-          ))}
-        </select>
-      </label>
-      <label>
-        Language:
-        <select onChange={e => handleLanguageChange(e.target.value)} value={mode}>
-          {languages.map(({ name, value }) => (
-            <option key={value} value={value}>
-              {name}
-            </option>
-          ))}
-        </select>
-      </label>
+      {defaults.theme !== undefined && (
+        <label>
+          Code theme:
+          <select onChange={e => handleThemeChange(e.target.value)} value={theme}>
+            {themes.map(({ name, value }) => (
+              <option key={value} value={value}>
+                {name}
+              </option>
+            ))}
+          </select>
+        </label>
+      )}
+      {defaults.mode !== undefined && (
+        <label>
+          Language:
+          <select onChange={e => handleLanguageChange(e.target.value)} value={mode}>
+            {languages.map(({ name, value }) => (
+              <option key={value} value={value}>
+                {name}
+              </option>
+            ))}
+          </select>
+        </label>
+      )}
       <Padding defaults={padding} onChange={padding => setPadding(padding)} />
     </div>
   );
