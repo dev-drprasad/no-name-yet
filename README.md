@@ -6,7 +6,7 @@
 
 I always wanted to add some text with code that i share on twitter. Unfortunately, twitter doesn't allow writing essays. So, i decided to make this project. This project is inspired from cardon.now.sh and samanthaming's tidbits 🙏.
 
-Start creating at https://tweekard.drprasad.in
+Start creating at https://tweekard.reddyprasad.me
 
 ## Features
 
