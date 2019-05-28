@@ -69,14 +69,14 @@ const registry = new Registry({
   },
 });
 
-async function liftOff(monaco, languageId, scopeMap) {
+async function liftOff(monaco, languageId, scopeMap, editor) {
   // map of monaco "language id's" to TextMate scopeNames
   const [, scope] = languagesToRegister.find(([id]) => id === languageId);
 
   const grammers = new Map();
   grammers.set(languageId, scope);
 
-  await wireTmGrammars(monaco, registry, grammers, scopeMap);
+  await wireTmGrammars(monaco, registry, grammers, scopeMap, editor);
 }
 
 const Editor = forwardRef(({ defaultValue, defaultMode, defaultTheme, minHeight }, ref) => {
@@ -129,7 +129,7 @@ const Editor = forwardRef(({ defaultValue, defaultMode, defaultTheme, minHeight 
             return acc;
           }, {});
         })
-        .then(themeScopes => liftOff(monaco, mode, themeScopes))
+        .then(themeScopes => liftOff(monaco, mode, themeScopes, editor))
         .then(() => void monaco.editor.setModelLanguage(editor.getModel(), mode))
         .then(() => monaco.editor.setTheme(theme))
         .catch(err => {
@@ -142,9 +142,11 @@ const Editor = forwardRef(({ defaultValue, defaultMode, defaultTheme, minHeight 
   const fitContent = editor => {
     setTimeout(() => {
       const newNumLines = editor._modelData.viewModel.getLineCount();
-      const [{ clientHeight: lineHeight }] = editor._domElement.getElementsByClassName("view-line");
-
-      editor._domElement.style.height = `${lineHeight * newNumLines + 15}px`;
+      const viewlineEl = editor._domElement.getElementsByClassName("view-line")[0];
+      // For some reason viewlineEl is `undefined` for sometimes
+      if (viewlineEl) {
+        editor._domElement.style.height = `${viewlineEl.clientHeight * newNumLines + 15}px`;
+      }
     }, 50); // UI has not updated even after event
   };
 

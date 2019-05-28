@@ -35,7 +35,7 @@ Start creating at https://tweekard.reddyprasad.me
 - [x] Add way to increase padding of card (vertically and horizontally)
 - [ ] Funtionality to add/remove footer (may be header) for any template
 - [ ] Multiple font support (both content/editor)
-- [ ] Should we switch to monaco-editor ??????
+- [x] Should we switch to monaco-editor ??????
 - [ ] Add names for templates
 - [ ] What about facebook share ??
 - [ ] For f\*\*k sake, we need emoji support first
