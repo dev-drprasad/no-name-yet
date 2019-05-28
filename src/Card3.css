@@ -2,12 +2,16 @@
   padding: 60px 50px;
   position: relative;
 
-  .TextArea {
-    text-align: left;
-    min-height: 270px;
-  }
   .CardInner {
     width: 700px;
     box-shadow: 8px 8px 20px 10px rgba(100, 100, 100, 0.15);
+
+    .Heading {
+      text-align: center;
+    }
+    .TextArea {
+      text-align: left;
+      min-height: 270px;
+    }
   }
 }

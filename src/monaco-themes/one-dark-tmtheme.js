@@ -1479,6 +1479,13 @@ export default {
       },
     },
     {
+      name: "js func parameter",
+      scope: ["variable.parameter.js"],
+      settings: {
+        foreground: "#ef596f",
+      },
+    },
+    {
       name: "js template literals begin",
       scope: ["keyword.other.template.begin"],
       settings: {

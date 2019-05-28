@@ -38,11 +38,7 @@ function App() {
   const [selectedCard, setSelecctedCard] = useState(0);
 
   const cardRef = React.useRef(null);
-  const editorRef = React.useRef(null);
 
-  // const handleBeforeLoad = ace => {
-  //   ace.config.set("themePath", process.env.PUBLIC_URL + "/js/ace/themes/");
-  // };
   const download = () => {
     domtoimage.toBlob(cardRef.current).then(blob => {
       const a = document.createElement("a");
@@ -76,20 +72,6 @@ function App() {
         .forEach(el => el.removeEventListener("paste", handler));
   }, [selectedCard]);
 
-  // useEffect(() => {
-  //   // some cards wont have editors
-  //   if (editorRef.current) {
-  //     const editor = editorRef.current.editor;
-
-  //     editor.setOptions({
-  //       fontFamily: "Fira Code",
-  //     });
-
-  //     editor.renderer.setScrollMargin(15, 15, 15, 15);
-  //     editor.renderer.setPadding(15);
-  //   }
-  // }, [selectedCard]);
-
   const templates = [0, 1, 2, 3];
 
   return (
@@ -111,12 +93,12 @@ function App() {
         </ul>
       </div>
       <main>
-        {selectedCard === 0 && <Card1 ref={{ cardRef, editorRef }} />}
-        {selectedCard === 1 && <Card2 ref={{ cardRef, editorRef }} />}
+        {selectedCard === 0 && <Card1 ref={{ cardRef }} />}
+        {selectedCard === 1 && <Card2 ref={{ cardRef }} />}
         {selectedCard === 2 && <Card3 ref={{ cardRef }} />}
         {selectedCard === 3 && <Card4 ref={{ cardRef }} />}
 
-        <div class="DownloadORShare">
+        <div className="DownloadORShare">
           <button type="button" onClick={download}>
             Download
           </button>

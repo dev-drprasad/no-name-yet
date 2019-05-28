@@ -69,14 +69,14 @@ const registry = new Registry({
   },
 });
 
-async function liftOff(monaco, languageId, scopeMap, editor) {
+async function liftOff(monaco, languageId, editor) {
   // map of monaco "language id's" to TextMate scopeNames
   const [, scope] = languagesToRegister.find(([id]) => id === languageId);
 
   const grammers = new Map();
   grammers.set(languageId, scope);
 
-  await wireTmGrammars(monaco, registry, grammers, scopeMap, editor);
+  await wireTmGrammars(monaco, registry, grammers, editor);
 }
 
 const Editor = forwardRef(({ defaultValue, defaultMode, defaultTheme, minHeight }, ref) => {
@@ -124,12 +124,8 @@ const Editor = forwardRef(({ defaultValue, defaultMode, defaultTheme, minHeight 
           const transformedTheme = tmthemeToMonaco(data);
           setEditorPaddingColor(transformedTheme.colors["editor.background"]);
           monaco.editor.defineTheme(theme, transformedTheme);
-          return transformedTheme.rules.reduce((acc, rule) => {
-            acc[rule.token] = true;
-            return acc;
-          }, {});
         })
-        .then(themeScopes => liftOff(monaco, mode, themeScopes, editor))
+        .then(() => liftOff(monaco, mode, editor))
         .then(() => void monaco.editor.setModelLanguage(editor.getModel(), mode))
         .then(() => monaco.editor.setTheme(theme))
         .catch(err => {

@@ -35,7 +35,7 @@ export default [
   // ["powershell", "source.powershell"],
   // ["pug", "source.pug"],
   ["python", "source.python"],
-  ["", "source.regexp.python"],
+  ["regexp.python", "source.regexp.python"],
   ["r", "source.r"],
   // ["razor", "source.razor"],
   // ["redis", "source.redis"],

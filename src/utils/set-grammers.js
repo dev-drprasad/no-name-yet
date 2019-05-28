@@ -30,7 +30,7 @@ class TokenizerState {
  * @param registry TmGrammar `Registry` this wiring should rely on to provide the grammars
  * @param languages `Map` of language ids (string) to TM names (string)
  */
-export function wireTmGrammars(monaco, registry, languages, scopeMap, editor) {
+export function wireTmGrammars(monaco, registry, languages, editor) {
   return Promise.all(
     Array.from(languages.keys()).map(async languageId => {
       try {
