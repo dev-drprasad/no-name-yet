@@ -182,6 +182,7 @@ export default {
       scope: "variable.parameter",
       settings: {
         fontStyle: "italic",
+        foreground: "#ff7edb",
       },
     },
     {
