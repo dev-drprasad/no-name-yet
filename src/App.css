@@ -4,10 +4,10 @@
   font-family: "Open Sans", sans-serif;
 
   main {
-    display: flex;
+    display: grid;
     justify-content: center;
-    flex-wrap: wrap;
-    padding: 30px;
+    margin: 30px;
+    grid-template-rows: auto auto auto;
 
     .DownloadORShare {
       width: 100%;
@@ -37,6 +37,7 @@
 .CardWrapper-CropBug {
   display: inline-block;
   margin: 30px 0;
+  flex-basis: 100%;
 }
 
 .App .Options {

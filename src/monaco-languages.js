@@ -15,7 +15,7 @@ export default [
   // ["handlebars", "source.handlebars"],
   ["haskell", "source.haskell"],
   ["html", "text.html.basic"],
-  ["", "text.html.javadoc"],
+  ["text.html.javadoc", "text.html.javadoc"],
   // ["ini", "source.ini"],
   ["java", "source.java"],
   ["js", "source.js"],

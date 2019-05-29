@@ -7,30 +7,32 @@ import ContentEditor from "./ContentEditor";
 
 import "./Card4.css";
 
-const defaultText = `Binary Search Tree:
+const defaultText = `Output :
 
-an element points to two elements, one on its left and one on its right. The element to the left is smaller, the element to the right is bigger. 
+input : This sentence contains two words, one and two
+output : [two]
+`;
 
-Each of those elements can also point to two elements (or one, or none). In effect, each element has up to two sub-trees.`;
+const defaultCode = `public class DuplicateWordsInString {
 
-const defaultCode = `data Tree a = EmptyTree | Node a (Tree a) (Tree a) deriving (Show, Read, Eq)  
+  public static void main(String[] args) {
+      String test = "This sentence contains two words, one and two";
+      System.out.println("input : " + test);
+      System.out.println("output : " + duplicateWords(test);
+  }
 
-singleton :: a -> Tree a  
-singleton x = Node x EmptyTree EmptyTree  
-  
-treeInsert :: (Ord a) => a -> Tree a -> Tree a  
-treeInsert x EmptyTree = singleton x  
-treeInsert x (Node a left right)   
-    | x == a = Node x left right  
-    | x < a  = Node a (treeInsert x left) right  
-    | x > a  = Node a left (treeInsert x right)
-
-treeElem :: (Ord a) => a -> Tree a -> Bool  
-treeElem x EmptyTree = False  
-treeElem x (Node a left right)  
-    | x == a = True  
-    | x < a  = treeElem x left  
-    | x > a  = treeElem x right`;
+  public static Set<String> duplicateWords(String input){
+      Set<String> duplicates = new HashSet<>();
+      
+      String[] words = input.split("\\s+");
+      Set<String> set = new HashSet<>();
+      
+      for(String word : words){
+          if(!set.add(word)){ duplicates.add(word); }
+      }
+      return duplicates;
+  }    
+}`;
 
 const DEFAULT_SETTINGS = {
   padding: { x: 50, y: 60 },
