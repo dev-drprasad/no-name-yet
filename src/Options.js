@@ -24,12 +24,17 @@ const Options = ({ defaults, onChange }) => {
     onChange({ ...options.current });
   };
 
+  const handleWidthChange = width => {
+    options.current.width = width;
+    onChange({ ...options.current });
+  };
+
   const setPadding = padding => {
     options.current.padding = padding;
     onChange({ ...options.current });
   };
 
-  const { cardBGColor, mode, theme, padding } = options.current;
+  const { cardBGColor, mode, theme, padding, width } = options.current;
   return (
     <div className="Options">
       <label>
@@ -60,6 +65,19 @@ const Options = ({ defaults, onChange }) => {
           </select>
         </label>
       )}
+      {defaults.width !== undefined && (
+        <label>
+          Width:
+          <input
+            type="number"
+            value={width}
+            max={1200}
+            min={300}
+            onChange={e => handleWidthChange(Number(e.target.value))}
+          />
+        </label>
+      )}
+
       <Padding defaults={padding} onChange={padding => setPadding(padding)} />
     </div>
   );

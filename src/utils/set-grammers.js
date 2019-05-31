@@ -41,7 +41,7 @@ export function wireTmGrammars(monaco, registry, languages, editor) {
           tokenize: (line, state) => {
             const res = grammar.tokenizeLine(line, state.ruleStack);
 
-            console.log("res.tokens :", res.tokens);
+            console.log("line, tokens :", line, res.tokens);
             return {
               endState: new TokenizerState(res.ruleStack),
               tokens: res.tokens.map(token => ({

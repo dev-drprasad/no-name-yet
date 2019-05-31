@@ -53,7 +53,6 @@ const languages = [
 
 const registry = new Registry({
   getGrammarDefinition: async scopeName => {
-    console.log("scopeName :", scopeName);
     const [languageId] = languagesToRegister.find(([, scope]) => scope === scopeName);
     console.log("languageId :", languageId);
 
@@ -160,6 +159,23 @@ const Editor = forwardRef(({ defaultValue, defaultMode, defaultTheme, minHeight 
     }
   }, []);
 
+  // useEffect(() => {
+  //   let intervalId;
+  //   intervalId = setInterval(() => {
+  //     const monacoRootNode = document.querySelector(".react-monaco-editor-container");
+  //     const viewLineNode = monacoRootNode.querySelector(".view-line");
+
+  //     if (viewLineNode.clientWidth > monacoRootNode.clientWidth) {
+  //       console.log("inside loop");
+  //       monacoRootNode.style.width = `${viewLineNode.clientWidth}px`;
+  //     } else {
+  //       clearInterval(intervalId);
+  //     }
+  //   }, 500);
+
+  //   return () => clearInterval(intervalId);
+  // }, []);
+
   useEffect(() => {
     const editor = editorRef.current;
     if (editor) {
@@ -187,6 +203,7 @@ const Editor = forwardRef(({ defaultValue, defaultMode, defaultTheme, minHeight 
     fontSize: fontSize,
     occurrencesHighlight: false,
     renderLineHighlight: "none",
+    scrollBeyondLastColumn: -1,
     value: defaultValue,
   };
 
@@ -200,8 +217,7 @@ const Editor = forwardRef(({ defaultValue, defaultMode, defaultTheme, minHeight 
         editorDidMount={editorDidMount}
         minHeight={minHeight}
       />
-
-      <input className="SettingsIcon" type="button" value="&#x2699;" />
+      <input className="SettingsIcon" type="button" value="&#x2699;" /> {/* Dont change this el */}
       <div className="EditorSettingsBar">
         <select
           className="Select"
@@ -245,3 +261,4 @@ export default Editor;
 // https://stackoverflow.com/questions/47017753/monaco-editor-dynamically-resizable/
 // https://stackoverflow.com/questions/53448735/is-there-a-way-to-completely-hide-the-gutter-of-monaco-editor
 // https://stackoverflow.com/questions/47017753/monaco-editor-dynamically-resizable
+// https://github.com/Microsoft/monaco-editor/issues/794
